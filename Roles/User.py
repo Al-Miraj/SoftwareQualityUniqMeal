@@ -2,7 +2,6 @@ import datetime
 
 
 
-# Define the abstract base User class
 class User():
     def __init__(self, username, password, firstName, lastName):
         self.Username = username
