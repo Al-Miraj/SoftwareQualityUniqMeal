@@ -165,20 +165,24 @@ def ResetconsultantPassword():
         cursor.close()
         conn.close()
 
+def AddSystemAdmin():
+    conn = DBConfig.dcm.conn
+    cursor = conn.cursor()
+    print("Enter the following details to add a new admin:")
+        
+    username = input("Username: ").strip()
+    password = input("Password: ").strip()
+    firstName = input("First Name: ").strip()
+    lastName = input("Last Name: ").strip()
 
+    if not username or not password or not firstName or not lastName:
+        print("All fields are required. Please try again.")
+        return
 
+    # Use placeholder values for SystemAdmin initialization
+    super_admin = SuperAdmin('placeholder_user', 'placeholder_pass', 'placeholder_first', 'placeholder_last')
+    super_admin.AddNewSystemAdmin(username, password, firstName, lastName)
 
+    print("Admin added successfully.")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    conn.close()
