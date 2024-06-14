@@ -31,9 +31,9 @@ def handle_optionA(option):
     elif option == '3':
         InputDef.UpdateConsultant()
     elif option == '4':
-        pass
+        InputDef.Deleteconsultant()
     elif option == '5':
-        pass
+        InputDef.ResetconsultantPassword()
     elif option == '6':
         pass
     elif option == '7':

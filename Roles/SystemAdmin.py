@@ -22,8 +22,8 @@ class SystemAdmin(Consultant):
         elif toUpdate == "Role":
             DBConfig.usersDAO.UpdateUserRole(username, oldInfo, newInfo)
 
-    def DeleteConsultant(self, username, password):
-        DBConfig.usersDAO.DeleteUser(username, password)
+    def DeleteConsultant(self, username):
+        DBConfig.usersDAO.DeleteUser(username)
 
     def ResetConsultantPassword(self, username):
         consToResetPW = DBConfig.usersDAO.SelectUser(username)

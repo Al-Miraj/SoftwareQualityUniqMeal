@@ -5,7 +5,9 @@ from Roles.Consultant import Consultant
 from Roles.SystemAdmin import SystemAdmin
 from Roles.SuperAdmin import SuperAdmin
 from Database.DBConfig import DBConfig
+from InputHandler.InputHandler import InputHandler
 import sqlite3
+from argon2 import PasswordHasher
 
 
 
@@ -91,6 +93,77 @@ def updateMenu():
 #         print("Succesfully updated to:", n_username)
 #         conn.commit()
 
+def Deleteconsultant():
+    conn = DBConfig.dcm.conn
+    cursor = conn.cursor()
+    
+    # Prompt user for the username of the consultant to delete
+    username = input("Enter the username of the consultant you want to delete: ")
+    
+    try:
+        # Execute the delete operation based on username
+        cursor.execute('''DELETE FROM users WHERE UserName = ?''', (username,))
+        
+        # Check if any row was affected
+        if cursor.rowcount == 1:
+            print(f"Successfully deleted consultant {username}")
+        else:
+            print(f"Consultant {username} not found or unable to delete.")
+            
+        # Commit the transaction
+        conn.commit()
+    
+    except Exception as e:
+        # Handle any errors that occur during the deletion process
+        print(f"Error deleting consultant: {str(e)}")
+    
+    finally:
+        # Close cursor and connection
+        cursor.close()
+        conn.close()
+
+
+
+def ResetconsultantPassword():
+    conn = DBConfig.dcm.conn
+    cursor = conn.cursor()
+    ph = PasswordHasher()
+
+    try:
+        username = input("Enter the username of the consultant whose password you want to reset: ")
+
+        # Check if the user exists
+        consToResetPW = DBConfig.usersDAO.SelectUser(username)
+        if not consToResetPW:
+            print(f"Consultant {username} not found.")
+            return
+        
+        n_password = input("New password: ")
+
+        # Check password format using InputHandler
+        if not InputHandler.checkPasswordFormat(n_password):
+            print(InputHandler.message)
+            return
+
+        # Hash the new password
+        hashed_password = ph.hash(n_password)
+
+        # Update the user's password in the database
+        DBConfig.usersDAO.UpdateUserPassword(username, consToResetPW[1], hashed_password)
+        print(f"Successfully updated password for: {username}")
+        
+        
+        # Commit the transaction
+        conn.commit()
+    
+    except Exception as e:
+        # Handle any exceptions that occur
+        print(f"Error resetting password: {str(e)}")
+    
+    finally:
+        # Close cursor and connection
+        cursor.close()
+        conn.close()
 
 
 
