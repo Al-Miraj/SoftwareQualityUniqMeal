@@ -27,4 +27,4 @@ if __name__ == "__main__":
     DBConfig.ResetUsers()
     #Input.CheckList()
     Login.Loginmain()
-    #InputDef.AddConsultant()
+    #InputDef.UpdateConsultant()

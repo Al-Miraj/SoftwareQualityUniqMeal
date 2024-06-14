@@ -29,7 +29,7 @@ def handle_optionA(option):
     elif option == '2':
         InputDef.AddConsultant()
     elif option == '3':
-        pass
+        InputDef.UpdateConsultant()
     elif option == '4':
         pass
     elif option == '5':
