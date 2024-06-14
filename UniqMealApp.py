@@ -26,4 +26,6 @@ def read_json_file(filename) -> list:  # buiten class?
 
 if __name__ == "__main__":
     #Login.Loginmain()
-    InputDef.AddSystemAdmin()
+    InputDef.ResetadminPassword()
+
+

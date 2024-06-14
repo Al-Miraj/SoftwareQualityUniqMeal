@@ -35,13 +35,13 @@ def handle_optionA(option):
     elif option == '5':
         InputDef.ResetconsultantPassword()
     elif option == '6':
-        pass
+        InputDef.AddSystemAdmin()
     elif option == '7':
-        pass
+        InputDef.UpdateSystemAdmin()
     elif option == '8':
-        pass
+        InputDef.DeleteSystemAdmin()
     elif option == '9':
-        pass
+        InputDef.ResetadminPassword()
     elif option == '10':
         pass
     elif option == '11':
