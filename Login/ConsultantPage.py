@@ -1,9 +1,6 @@
 from Roles.Consultant import Consultant
 
-
-Consultant
-
-def display_menuA():
+def display_menuC():
     print(
     "Consultant\n" +
     "1: Update your password \n" + 
@@ -13,7 +10,7 @@ def display_menuA():
     "5: Exit program"
     )
 
-def handle_optionA(option):
+def handle_optionC(option):
     if option == '1':
         pass
     elif option == '2':

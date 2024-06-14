@@ -8,6 +8,7 @@ from Database.DBConfig import DBConfig
 from Database.DataAccesObjects.UsersDAO import UsersDAO
 from Database.DataAccesObjects.MembersDAO import MembersDAO
 from Login import Login
+from Login import InputDef
 
 import sqlite3
 import os
@@ -24,4 +25,6 @@ def read_json_file(filename) -> list:  # buiten class?
 
 if __name__ == "__main__":
     DBConfig.ResetUsers()
+    #Input.CheckList()
     Login.Loginmain()
+    #InputDef.AddConsultant()
