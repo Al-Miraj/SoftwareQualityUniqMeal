@@ -9,3 +9,6 @@ class InputChecker:
             print("yay")
         else:
             print("nay")
+
+    # def checkZipcode(zipCode):
+    #     # zipcode_check_pattern = r'^d{8}'

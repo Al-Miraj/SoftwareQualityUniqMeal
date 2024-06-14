@@ -1,5 +1,9 @@
+import random
 from .User import User
 from .Member import Member
+import sqlite3
+import argon2
+
 
 class Consultant(User):
     def UpdatePassword(self, password):
