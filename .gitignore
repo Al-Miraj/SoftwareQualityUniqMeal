@@ -1,0 +1,15 @@
+__pycache__/InputChecker.cpython-310.pyc
+__pycache__/Member.cpython-310.pyc
+__pycache__/User.cpython-310.pyc
+Database/__pycache__/DBConfig.cpython-310.pyc
+Database/__pycache__/DBConnectionManager.cpython-310.pyc
+Database/__pycache__/SetUpDB.cpython-310.pyc
+Database/DataAccesObjects/__pycache__/MembersDAO.cpython-310.pyc
+Database/DataAccesObjects/__pycache__/UsersDAO.cpython-310.pyc
+JsonFileHandler/__pycache__/JsonFileHandler.cpython-310.pyc
+Roles/__pycache__/Consultant.cpython-310.pyc
+Roles/__pycache__/Member.cpython-310.pyc
+Roles/__pycache__/SuperAdmin.cpython-310.pyc
+Roles/__pycache__/SystemAdmin.cpython-310.pyc
+Roles/__pycache__/User.cpython-310.pyc
+
