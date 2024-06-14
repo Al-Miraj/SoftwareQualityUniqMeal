@@ -1,22 +1,28 @@
 from .SystemAdmin import SystemAdmin
-
+from Database.DBConfig import DBConfig
 
 class SuperAdmin(SystemAdmin):
-    def UpdatePassword(self, password=""):
-        return "SuperAdmin is not allowed to change its own password."
+    def UpdatePassword(self, password="") -> str:
+        print("SuperAdmin is not allowed to change its own password.")
     
     def AddNewSystemAdmin(self, username, password, firstName, lastName):
         newSystemAdmin = SystemAdmin(username, password, firstName, lastName)
-        #todo save new system admin to database
+        DBConfig.usersDAO.InsertUsers([newSystemAdmin])
     
-    def UpdateSystemAdminInfo(self, SystemAdmin):
-        #todo figure out what can and cannot be updated or modified
-        pass
+    def UpdateSystemAdminInfo(self, toUpdate, username, oldInfo, newInfo):
+        if toUpdate == "Username":
+            DBConfig.usersDAO.UpdateUserUserName(oldInfo, newInfo)
+        elif toUpdate == "FirstName":
+            DBConfig.usersDAO.UpdateUserFirstName(username, oldInfo, newInfo)
+        elif toUpdate == "LastName":
+            DBConfig.usersDAO.UpdateUserLastName(username, oldInfo, newInfo)
+        #update Role allowed???
+        elif toUpdate == "Role":
+            DBConfig.usersDAO.UpdateUserRole(username, oldInfo, newInfo)
 
-    def DeleteSystemAdmin(self, systemAdmin):
-        #todo use query to delete systemAmdin from database
-        pass
+    def DeleteSystemAdmin(self, username, password):
+        DBConfig.usersDAO.DeleteUser(username, password)
 
-    def ResetSystemAdminPassword(self, systemAdmin):
-        consultant.password = "temporarySy123" #todo should adhere to pw rules
-        #todo update database
+    def ResetSystemAdminPassword(self, username):
+        systAdminToResetPW = DBConfig.usersDAO.SelectUser(username)
+        DBConfig.usersDAO.UpdateUserPassword(username, systAdminToResetPW[1], "temporarySYS123") #todo should adhere to pw rules

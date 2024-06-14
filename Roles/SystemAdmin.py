@@ -1,26 +1,33 @@
+from .Member import Member
 from .Consultant import Consultant
+from Database.DBConfig import DBConfig
 
 
 class SystemAdmin(Consultant):
-    def CheckAllUsers(self):
-        #todo fetch all users from database and print their profile
-        pass
+    def CheckAllUsers(self) -> list | None:
+        return DBConfig.usersDAO.SelectAllUsers()
 
-    def AddNewConsultant(self, username, password, firstName, lastName):
+    def AddNewConsultant(self, username, password, firstName, lastName) -> None:
         newConsultant = Consultant(username, password, firstName, lastName)
-        #todo save new consultant to database
+        DBConfig.usersDAO.InsertUsers([newConsultant])
     
-    def UpdateConsultantInfo(self, consultant):
-        #todo figure out what can and cannot be updated or modified
-        pass
+    def UpdateConsultantInfo(self, toUpdate, username, oldInfo, newInfo):
+        if toUpdate == "Username":
+            DBConfig.usersDAO.UpdateUserUserName(oldInfo, newInfo)
+        elif toUpdate == "FirstName":
+            DBConfig.usersDAO.UpdateUserFirstName(username, oldInfo, newInfo)
+        elif toUpdate == "LastName":
+            DBConfig.usersDAO.UpdateUserLastName(username, oldInfo, newInfo)
+        #update Role allowed???
+        elif toUpdate == "Role":
+            DBConfig.usersDAO.UpdateUserRole(username, oldInfo, newInfo)
 
-    def DeleteConsultant(self, consultant):
-        #todo use query to delete consultant from database
-        pass
+    def DeleteConsultant(self, username, password):
+        DBConfig.usersDAO.DeleteUser(username, password)
 
-    def ResetConsultantPassword(self, consultant):
-        consultant.password = "temporaryC123" #todo should adhere to pw rules
-        #todo update database
+    def ResetConsultantPassword(self, username):
+        consToResetPW = DBConfig.usersDAO.SelectUser(username)
+        DBConfig.usersDAO.UpdateUserPassword(username, consToResetPW[1], "temporaryC123") #todo should adhere to pw rules
     
     def MakeSystemBackup(self):
         #wtf does this mean
@@ -34,6 +41,5 @@ class SystemAdmin(Consultant):
         #wtf does this mean part 3??????
         pass
 
-    def DeleteMember(self, member):
-        #todo use query to delete member from database
-        pass
+    def DeleteMember(self, membershipID, firstName, lastName):
+        DBConfig.membersDAO.DeleteMember(membershipID, firstName, lastName)

@@ -2,7 +2,7 @@ import random
 import datetime
 
 class Member:     
-    def __init__(self, firstName, lastName, age, gender, weight, street, houseNumber, zipCode, city, email, phoneNumber):
+    def __init__(self, firstName, lastName, age, gender, weight, street, houseNumber, zipCode, city, email, phoneNumber, registrationDate=None):
         #WARNING: dont change the order of the attributes as they need to be the same order as the database columns
         self.MembershipID = self._generateMembershipID()
         self.FirstName = firstName
@@ -16,7 +16,7 @@ class Member:
         self.City = city
         self.Email = email
         self.PhoneNumber = phoneNumber
-        self.RegistrationDate = datetime.datetime.now()
+        self.RegistrationDate = datetime.datetime.now() if registrationDate == None else registrationDate
     
     def _generateMembershipID(self):
         today = datetime.datetime.now()
