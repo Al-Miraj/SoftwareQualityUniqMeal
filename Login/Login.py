@@ -2,7 +2,9 @@ import logging
 import os
 import sqlite3
 from Database.DBConfig import DBConfig
-from .ConsultantPage import ConsultantPage
+from . import ConsultantPage
+from . import SystemPage
+from . import SuperPage
 
 ph = DBConfig.ph
 
@@ -68,42 +70,38 @@ def handle_option(option):
     if option == '1':
         print("You selected Log in as Super Administrator.\n")
         if login("SuperAdmin"):
-            # Call function for Super Admin
-            mainSuper()
+            print("Welcome, Super Administrator!")
+            SuperPage.display_menuA()
+            user_input = input("Select an option: ")
+            SuperPage.handle_optionA(user_input)
+
+
     elif option == '2':
         print("You selected Log in as System Administrator.")
         if login("SystemAdmin"):
-            # Call function for System Admin
-            mainAdmin()
+            print("Welcome, System Administrator!")
+            SystemPage.display_menuB()
+            user_input = input("Select an option: ")
+            SystemPage.handle_optionB(user_input)
+
+    
     elif option == '3':
         print("You selected Log in as Consultant.")
         if login("Consultant"):
-            # Call function for Consultant
-            mainConsultant()
+            print("Welcome, Consultant!")
+            ConsultantPage.display_menuC()
+            user_input = input("Select an option: ")
+            ConsultantPage.handle_optionC(user_input)
+    
     elif option == '4':
         print("* " * 20)
         print("Exiting...")
         print("* " * 20)
         return False
+    
     else:
         print("Invalid option. Please try again.")
-
-def mainSuper():
-    print("Welcome, Super Administrator!")
-    #Roles\\SuperAdmin()
-    # Call function for Super Admin
-
-def mainAdmin():
-    print("Welcome, System Administrator!")
-    #Roles\\SystemAdmin()
-    # Call function for System Admin
-
-def mainConsultant():
-    print("Welcome, Consultant!")
-    #Roles\\Consultant()
-    display_menuA()
-    user_input = input("Select an option: ")
-    handle_optionA(user_input)
+    
 
 def Loginmain():
 

@@ -9,6 +9,7 @@ from Database.DataAccesObjects.UsersDAO import UsersDAO
 from Database.DataAccesObjects.MembersDAO import MembersDAO
 from InputHandler.InputHandler import InputHandler
 #from Login import Login
+from Login import InputDef
 
 import sqlite3
 import os
