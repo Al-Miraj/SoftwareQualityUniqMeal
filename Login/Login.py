@@ -1,21 +1,17 @@
 import logging
 import os
 import sqlite3
+from Database.DBConfig import DBConfig
 
-from argon2 import PasswordHasher
-
-# # Initialize the password hasher
-ph = PasswordHasher()
+ph = DBConfig.ph
 
 # Initialize SQLite database connection
-conn = sqlite3.connect('Database\\UniqueMealDB.db')
+conn = DBConfig.dcm.conn
 cursor = conn.cursor()
 
 
 
 def executeQuery(query, *args):
-    print("HI")
-
     cursor.execute(query, args)
     
     if query.strip().upper().startswith('SELECT'):
@@ -26,17 +22,20 @@ def executeQuery(query, *args):
 def login(role):
     searchUsername = input("Enter username: ")
     searchPassword = input("Enter password: ")
+    print()
 
     try:
         # Retrieve user from database
         login_user = executeQuery("SELECT * FROM users WHERE Username = ? AND Role = ?", searchUsername, role)
+        
 
         if login_user:
             # Retrieve stored hashed password
-            stored_hash = login_user[0][1]  # Adjust based on your database schema
+            stored_hash = login_user[1]  # Adjust based on your database schema
+
             # Verify password attempt
             try:
-                print(ph.verify(stored_hash, searchPassword))
+                print(ph.verify(stored_hash, searchUsername+searchPassword))
                 logging.info(f"Successful login attempt for {searchUsername}.")
                 print("Login successful.")
                 print("* " * 20)
@@ -66,7 +65,7 @@ def display_menu():
 
 def handle_option(option):
     if option == '1':
-        print("You selected Log in as Super Administrator.")
+        print("You selected Log in as Super Administrator.\n")
         if login("SuperAdmin"):
             # Call function for Super Admin
             mainSuper()
@@ -107,12 +106,12 @@ def Loginmain():
     while True:
         display_menu()
         option = input("Select an option: ")
-        logging.info(f"User selected option {option}.")
+        logging.info(f"User selected option {option}.\n")
         if not handle_option(option):
             break
 
     # Close database connection
-    conn.close()
+    DBConfig.dcm.disconnect()
     logging.info("Application exited.")
 
 

@@ -4,6 +4,7 @@ from .DBConnectionManager import DCM
 from JsonFileHandler.JsonFileHandler import JsonFileHandler
 from Roles.Member import Member
 from Roles.User import User
+from argon2 import PasswordHasher
 
 class DBConfig:
     DBName = "UniqueMealDB"
@@ -15,6 +16,7 @@ class DBConfig:
     dcm.connect()
     usersDAO = UsersDAO(dcm.conn)
     membersDAO = MembersDAO(dcm.conn)
+    ph = PasswordHasher()
 
 
     def ResetMembers():
@@ -78,7 +80,7 @@ class DBConfig:
             
             insertUsersQ = """INSERT OR IGNORE INTO users (Username, Password, FirstName, LastName, RegistrationDate, Role)
                             VALUES (?, ?, ?, ?, ?, ?)"""
-            insertUsersValues = [*userObj.__dict__.values()]
+            insertUsersValues = [userObj.Username, DBConfig.ph.hash(userObj.Username + userObj.Password), userObj.FirstName, userObj.LastName, userObj.RegistrationDate, userObj.Role]
             cursor.execute(insertUsersQ, insertUsersValues)
         DBConfig.dcm.conn.commit()
 
