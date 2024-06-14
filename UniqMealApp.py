@@ -274,6 +274,7 @@ if __name__ == "__main__":
 
     DBConfig.ResetUsers()
     DBConfig.ResetMembers()
+    DBConfig.dcm.disconnect()
 
 
 
