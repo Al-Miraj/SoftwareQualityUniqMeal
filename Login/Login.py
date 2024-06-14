@@ -2,6 +2,7 @@ import logging
 import os
 import sqlite3
 from Database.DBConfig import DBConfig
+from .ConsultantPage import ConsultantPage
 
 ph = DBConfig.ph
 
@@ -89,12 +90,20 @@ def handle_option(option):
 
 def mainSuper():
     print("Welcome, Super Administrator!")
+    #Roles\\SuperAdmin()
+    # Call function for Super Admin
 
 def mainAdmin():
     print("Welcome, System Administrator!")
+    #Roles\\SystemAdmin()
+    # Call function for System Admin
 
 def mainConsultant():
     print("Welcome, Consultant!")
+    #Roles\\Consultant()
+    display_menuA()
+    user_input = input("Select an option: ")
+    handle_optionA(user_input)
 
 def Loginmain():
 

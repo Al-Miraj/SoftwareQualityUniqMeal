@@ -3,6 +3,7 @@ from .Member import Member
 from Database.DBConfig import DBConfig
 
 class Consultant(User):
+
     def UpdatePassword(self, newPassword):
         oldPassword = self.Password
         username = self.Username
@@ -43,5 +44,8 @@ class Consultant(User):
 
     def SearchMemberInfo(self, searchTerm) -> any:
         return DBConfig.membersDAO.SelectMemberByMatch(searchTerm)
+
+
+
 
 
