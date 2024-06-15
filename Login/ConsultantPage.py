@@ -1,4 +1,5 @@
 from Roles.Consultant import Consultant
+from . import InputDef
 
 def display_menuC():
     print(
@@ -6,19 +7,19 @@ def display_menuC():
     "1: Update your password \n" + 
     "2: Add new member \n" +
     "3: Update member \n" +
-    "4: Search member by first last and member id\n" +
+    "4: Search member \n" +
     "5: Exit program"
     )
 
 def handle_optionC(option):
     if option == '1':
-        pass
+        InputDef.PasswordRenew()
     elif option == '2':
-        pass
+        InputDef.AddMember()
     elif option == '3':
-        pass
+        InputDef.UpdateMember()
     elif option == '4':
-        pass
+        InputDef.searchMember()
     elif option == '5':
         print("Exiting...")
         exit(0)

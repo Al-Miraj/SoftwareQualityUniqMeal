@@ -43,7 +43,7 @@ def login(role):
                 print("Login successful.")
                 print("* " * 20)
                 print("* " * 20)
-                return True
+                return True, searchPassword, searchUsername
             except exceptions.VerifyMismatchError:
                 logging.info(f"Failed login attempt for {searchUsername}.")
                 print("Login incorrect.")
@@ -80,6 +80,7 @@ def handle_option(option):
         print("You selected Log in as System Administrator.")
         if login("SystemAdmin"):
             print("Welcome, System Administrator!")
+            print()
             SystemPage.display_menuB()
             user_input = input("Select an option: ")
             SystemPage.handle_optionB(user_input)

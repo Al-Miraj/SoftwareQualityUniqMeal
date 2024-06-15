@@ -3,7 +3,7 @@ from Roles.SuperAdmin import SuperAdmin
 
 def display_menuA():
     print(
-    "Consultant\n" +
+    "Super add\n" +
     "1: Check Users and their Roles \n" + 
     "2: Add new Consultant \n" +
     "3: Update Consultant \n" +
@@ -55,7 +55,7 @@ def handle_optionA(option):
     elif option == '15':
         InputDef.Deletemember()
     elif option == '16':
-        pass
+        InputDef.searchMember()
     elif option == '17':
         print("Exiting...")
         exit(0)
