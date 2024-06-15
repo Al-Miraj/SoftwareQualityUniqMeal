@@ -404,14 +404,36 @@ def updateMenu2():
 #         conn.commit()
 
 
+def Deletemember():
+    conn = DBConfig.dcm.conn
+    cursor = conn.cursor()
+    
+    # Prompt user for the username of the consultant to delete
+    First_name = input("Enter the first name of the member you want to delete: ")
+    Last_name = input("Enter the Last name of the member you want to delete:  ")
 
-
-
-
-
-
-
-
+    
+    try:
+        # Execute the delete operation based on username
+        cursor.execute('''DELETE FROM members WHERE FirstName = ? AND LastName = ? ''', (First_name, Last_name ))
+        
+        # Check if any row was affected
+        if cursor.rowcount == 1:
+            print(f"Successfully deleted Member {First_name} + {Last_name}")
+        else:
+            print(f"Member {First_name} not found or unable to delete.")
+            
+        # Commit the transaction
+        conn.commit()
+    
+    except Exception as e:
+        # Handle any errors that occur during the deletion process
+        print(f"Error deleting : {str(e)}")
+    
+    finally:
+        # Close cursor and connection
+        cursor.close()
+        conn.close()
 
 
 

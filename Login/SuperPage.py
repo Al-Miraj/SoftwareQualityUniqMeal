@@ -53,7 +53,7 @@ def handle_optionA(option):
     elif option == '14':
         InputDef.UpdateMember()
     elif option == '15':
-        pass
+        InputDef.Deletemember()
     elif option == '16':
         pass
     elif option == '17':
