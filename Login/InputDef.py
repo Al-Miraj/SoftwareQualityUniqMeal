@@ -168,6 +168,7 @@ def ResetconsultantPassword():
 def AddSystemAdmin():
     conn = DBConfig.dcm.conn
     cursor = conn.cursor()
+    ph = PasswordHasher
     print("Enter the following details to add a new admin:")
         
     username = input("Username: ").strip()
@@ -175,14 +176,19 @@ def AddSystemAdmin():
     firstName = input("First Name: ").strip()
     lastName = input("Last Name: ").strip()
 
+    # if not InputHandler.checkPasswordFormat(password):
+    #     print(InputHandler.message)
+    #     return
+
     if not username or not password or not firstName or not lastName:
         print("All fields are required. Please try again.")
         return
 
     # Use placeholder values for SystemAdmin initialization
     super_admin = SuperAdmin('placeholder_user', 'placeholder_pass', 'placeholder_first', 'placeholder_last')
-    super_admin.AddNewSystemAdmin(username, password, firstName, lastName)
+    hashed_password = ph.hash(password)
+    super_admin.AddNewSystemAdmin(username, hashed_password, firstName, lastName)
 
-    print("Admin added successfully.")
+    print("Admin added successfully.") 
 
     conn.close()
