@@ -64,7 +64,8 @@ def display_menu():
     print("Press 1. Log in as Super Administrator")
     print("Press 2. Log in as System Administrator")
     print("Press 3. Log in as Consultant")
-    print("Press 4. Exit")
+    choice = int(print("Press 4. Exit"))
+    handle_option(choice)
 
 def handle_option(option):
     if option == '1':
