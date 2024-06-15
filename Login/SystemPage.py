@@ -1,8 +1,9 @@
 from Roles.SystemAdmin import SystemAdmin
+from . import InputDef
 
 def display_menuB():
     print(
-    "Consultant\n" +
+    "Admin\n" +
     "1: Update your password \n" + 
     "2: List of Users and their Roles \n" +
     "3: Add new Consultant \n" +
@@ -21,17 +22,17 @@ def display_menuB():
 
 def handle_optionB(option):
     if option == '1':
-        pass
+        InputDef.PasswordRenew()
     elif option == '2':
-        pass
+        InputDef.CheckList()
     elif option == '3':
-        pass
+        InputDef.AddConsultant()
     elif option == '4':
-        pass
+        InputDef.UpdateConsultant()
     elif option == '5':
-        pass
+        InputDef.DeleteConsultant()
     elif option == '6':
-        pass
+        InputDef.ResetConsultantPassword()
     elif option == '7':
         pass
     elif option == '8':
@@ -39,13 +40,13 @@ def handle_optionB(option):
     elif option == '9':
         pass
     elif option == '10':
-        pass
+        InputDef.AddMember()
     elif option == '11':
-        pass
+        InputDef.UpdateMember()
     elif option == '12':
-        pass
+        InputDef.DeleteMember()
     elif option == '13':
-        pass
+        InputDef.SearchMember()
     elif option == '14':
         print("Exiting...")
         exit(0)

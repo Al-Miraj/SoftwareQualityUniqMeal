@@ -10,6 +10,7 @@ import sqlite3
 from argon2 import PasswordHasher
 from Roles.User import User
 from Roles.Member import Member
+from argon2.exceptions import VerifyMismatchError
 
 
 
@@ -437,3 +438,108 @@ def Deletemember():
 
 
 
+
+
+
+def searchMember(search_key='all'):
+    conn = DBConfig.dcm.conn
+    cursor = conn.cursor()
+
+    print("Searching for member....")
+    search_input = input("Type (partial) member information: ").lower()
+
+    if search_key == 'all':
+        search_key_list = ['memberID', 'firstName', 'lastName', 'age', 'gender', 'weight', 'street', 'houseNumber', 'zipCode', 'city', 'email', 'phoneNumber']
+    else:
+        search_key_list = [search_key]
+
+    cursor.execute(''' SELECT * FROM members ''')
+    records = cursor.fetchall()
+    total_found = 0
+    for row in records:
+        search = False
+        for key in search_key_list:
+            if key == 'memberID':
+                field_value = str(row[0]).lower()
+            elif key == 'firstName':
+                field_value = str(row[1]).lower()
+            elif key == 'lastName':
+                field_value = str(row[2]).lower()
+            elif key == 'age':
+                field_value = str(row[3]).lower()
+            elif key == 'gender':
+                field_value = str(row[4]).lower()
+            elif key == 'weight':
+                field_value = str(row[5]).lower()
+            elif key == 'street':
+                field_value = str(row[5]).lower()
+            elif key == 'houseNumber':
+                field_value = str(row[6]).lower()
+            elif key == 'zipCode':
+                field_value = str(row[7]).lower()
+            elif key == 'city':
+                field_value = str(row[8]).lower()
+            elif key == 'email':
+                field_value = str(row[9]).lower()
+            elif key == 'phoneNumber':
+                field_value = str(row[10]).lower()
+
+            if search_input in field_value:
+                search = True
+                break
+
+        if search:
+            print(f"Found match: {search_input} in {key} - {field_value}")
+            print(row)
+            total_found += 1
+
+    print(f"Total members found: {total_found}")
+
+    cursor.close()
+    conn.close()
+
+
+
+
+def PasswordRenew():
+    conn = DBConfig.dcm.conn
+    cursor = conn.cursor()
+    ph = PasswordHasher()
+
+    try:
+        username = input("Enter the username to reset: ")
+
+        # Check if the user exists
+        consToResetPW = DBConfig.usersDAO.SelectUser(username)
+        if not consToResetPW:
+            print(f"Consultant {username} not found.")
+            return
+
+        # Debug: Print the stored password hash
+        stored_password = consToResetPW[1]  # assuming the password is stored in the 2nd column
+        print(f"Stored password hash: {stored_password}")
+
+
+        # If the old password is correct, ask for the new password
+        n_password = input("New password: ")
+
+        # Check password format using InputHandler
+        if not InputHandler.checkPasswordFormat(n_password):
+            print(InputHandler.message)
+            return
+
+        # Hash the new password
+        hashed_password = ph.hash(n_password)
+
+        # Update the user's password in the database
+        DBConfig.usersDAO.UpdateUserPassword(username, consToResetPW[1], hashed_password)
+        print(f"Successfully updated password for: {username}")
+
+        # Commit the transaction
+        conn.commit()
+
+    except Exception as e:
+        print(f"Error: {e}")
+        conn.rollback()
+    finally:
+        conn.close()
