@@ -49,9 +49,9 @@ def handle_optionA(option):
     elif option == '12':
         pass
     elif option == '13':
-        pass
+        InputDef.AddMember()
     elif option == '14':
-        pass
+        InputDef.UpdateMember()
     elif option == '15':
         pass
     elif option == '16':
