@@ -2,6 +2,8 @@ import re
 
 
 class InputHandler:
+    error = None
+    message = ''
     Cities = [
       "Amsterdam",
       "Rotterdam",

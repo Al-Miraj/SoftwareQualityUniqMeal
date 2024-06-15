@@ -31,17 +31,17 @@ def handle_optionA(option):
     elif option == '3':
         InputDef.UpdateConsultant()
     elif option == '4':
-        pass
+        InputDef.Deleteconsultant()
     elif option == '5':
-        pass
+        InputDef.ResetconsultantPassword()
     elif option == '6':
-        pass
+        InputDef.AddSystemAdmin()
     elif option == '7':
-        pass
+        InputDef.UpdateSystemAdmin()
     elif option == '8':
-        pass
+        InputDef.DeleteSystemAdmin()
     elif option == '9':
-        pass
+        InputDef.ResetadminPassword()
     elif option == '10':
         pass
     elif option == '11':
@@ -49,11 +49,11 @@ def handle_optionA(option):
     elif option == '12':
         pass
     elif option == '13':
-        pass
+        InputDef.AddMember()
     elif option == '14':
-        pass
+        InputDef.UpdateMember()
     elif option == '15':
-        pass
+        InputDef.Deletemember()
     elif option == '16':
         pass
     elif option == '17':
