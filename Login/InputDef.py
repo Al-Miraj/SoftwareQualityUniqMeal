@@ -51,7 +51,7 @@ def AddConsultant():
 def UpdateConsultant():
     updateMenu()
     option = input("Select an option: ")
-    handle_optionM(option)
+    handle_option(option)
 
 def updateMenu():
     print(
