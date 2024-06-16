@@ -235,9 +235,9 @@ def handle_optionA(option):
         if InputHandler.error:
             print(InputHandler.message)
         else:
-            encrypted_username = encrypt(n_name)
+            encrypted_firstName = encrypt(n_name)
             query = '''UPDATE users SET FirstName = ? WHERE FirstName = ?'''
-            cursor.execute(query, (encrypted_username, updatemem))
+            cursor.execute(query, (encrypted_firstName, updatemem))
             print("Successfully updated to:", n_name)
             conn.commit()
     elif option == '2':
@@ -397,42 +397,42 @@ def updateMenu2():
 
 )
 
-# def handle_option2(option):
-#     conn = DBConfig.dcm.conn
-#     cursor = conn.cursor()
+def handle_option2(option):
+    conn = DBConfig.dcm.conn
+    cursor = conn.cursor()
     
-#     if option == '1':
-#         updatemem = input("Type the first name of the Admin you want to update: ")
-#         n_name = input("Update first name: ")
-#         check_name = InputHandler.checkFirstName(n_name)
-#         if InputHandler.error:
-#             print(InputHandler.message)
-#         else:
-#             query = '''UPDATE users SET FirstName = ? WHERE FirstName = ?'''
-#             cursor.execute(query, (n_name, updatemem))
-#             print("Successfully updated to:", n_name)
-#             conn.commit()
-#     elif option == '2':
-#         updatemem = input("Type the last name of the Admin you want to update: ")
-#         n_lname = input("Update last name: ")
-#         check_lname = InputHandler.checkLastName(n_lname)
-#         if InputHandler.error:
-#             print(InputHandler.message)
-#         else:
-#             query = '''UPDATE users SET LastName = ? WHERE LastName = ?'''
-#             cursor.execute(query, (n_lname, updatemem))
-#             print("Successfully updated to:", n_lname)
-#             conn.commit()
-#     elif option == '3':
-#         updatemem = input("Type the username of the Admin you want to update: ")
-#         n_username = input("Update username: ")
-#         if InputHandler.error:
-#             print(InputHandler.message)
-#         else:
-#             query = '''UPDATE users SET Username = ? WHERE Username = ?'''
-#             cursor.execute(query, (n_username, updatemem))
-#             print("Successfully updated to:", n_username)
-#             conn.commit()
+    if option == '1':
+        updatemem = input("Type the first name of the Admin you want to update: ")
+        n_name = input("Update first name: ")
+        check_name = InputHandler.checkFirstName(n_name)
+        if InputHandler.error:
+            print(InputHandler.message)
+        else:
+            query = '''UPDATE users SET FirstName = ? WHERE FirstName = ?'''
+            cursor.execute(query, (n_name, updatemem))
+            print("Successfully updated to:", n_name)
+            conn.commit()
+    elif option == '2':
+        updatemem = input("Type the last name of the Admin you want to update: ")
+        n_lname = input("Update last name: ")
+        check_lname = InputHandler.checkLastName(n_lname)
+        if InputHandler.error:
+            print(InputHandler.message)
+        else:
+            query = '''UPDATE users SET LastName = ? WHERE LastName = ?'''
+            cursor.execute(query, (n_lname, updatemem))
+            print("Successfully updated to:", n_lname)
+            conn.commit()
+    elif option == '3':
+        updatemem = input("Type the username of the Admin you want to update: ")
+        n_username = input("Update username: ")
+        if InputHandler.error:
+            print(InputHandler.message)
+        else:
+            query = '''UPDATE users SET Username = ? WHERE Username = ?'''
+            cursor.execute(query, (n_username, updatemem))
+            print("Successfully updated to:", n_username)
+            conn.commit()
     
 
 
