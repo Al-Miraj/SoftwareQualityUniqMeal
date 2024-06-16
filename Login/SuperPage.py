@@ -1,5 +1,6 @@
 from . import InputDef
 from Roles.SuperAdmin import SuperAdmin
+from . import LOG
 
 def display_menuA():
     print(
@@ -63,7 +64,7 @@ def handle_optionA(option):
     elif option == '11':
         pass
     elif option == '12':
-        pass
+        LOG.getLog()
     elif option == '13':
         InputDef.AddMember()
         display_menuA()

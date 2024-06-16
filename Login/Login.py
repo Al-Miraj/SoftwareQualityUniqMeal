@@ -7,6 +7,7 @@ from Database.DBConfig import DBConfig
 from . import ConsultantPage
 from . import SystemPage
 from . import SuperPage
+from . import LOG
 
 ph = DBConfig.ph
 
@@ -137,7 +138,7 @@ def handle_option(option):
 
 def Loginmain():
     # Initialize logging
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    LOG.init_log()
     logging.info("Application started.")
 
     # Loop for displaying menu and handling user input

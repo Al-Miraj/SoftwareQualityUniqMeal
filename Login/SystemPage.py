@@ -1,5 +1,6 @@
 from Roles.SystemAdmin import SystemAdmin
 from . import InputDef
+from . import LOG
 
 def display_menuB():
     print(
@@ -47,7 +48,7 @@ def handle_optionB(option):
     elif option == '8':
         pass
     elif option == '9':
-        pass
+        LOG.getLog()
     elif option == '10':
         InputDef.AddMember()
         display_menuB()
