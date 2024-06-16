@@ -10,7 +10,6 @@ from Database.DataAccesObjects.MembersDAO import MembersDAO
 from InputHandler.InputHandler import InputHandler
 from Login import Login
 from Login import InputDef
-from Login import LOG
 
 import sqlite3
 import os
@@ -26,9 +25,7 @@ def read_json_file(filename) -> list:  # buiten class?
 
 
 if __name__ == "__main__":
-    #Login.Loginmain()
-    InputDef.UpdateMember()
-    #LOG.getLog()
+
 
 
 
