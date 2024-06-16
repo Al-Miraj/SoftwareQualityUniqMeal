@@ -235,8 +235,9 @@ def handle_optionA(option):
         if InputHandler.error:
             print(InputHandler.message)
         else:
+            encrypted_username = encrypt(n_name)
             query = '''UPDATE users SET FirstName = ? WHERE FirstName = ?'''
-            cursor.execute(query, (n_name, updatemem))
+            cursor.execute(query, (encrypted_username, updatemem))
             print("Successfully updated to:", n_name)
             conn.commit()
     elif option == '2':
@@ -246,8 +247,9 @@ def handle_optionA(option):
         if InputHandler.error:
             print(InputHandler.message)
         else:
+            encrypted_lastName = encrypt(n_lname)
             query = '''UPDATE users SET LastName = ? WHERE LastName = ?'''
-            cursor.execute(query, (n_lname, updatemem))
+            cursor.execute(query, (encrypted_lastName, updatemem))
             print("Successfully updated to:", n_lname)
             conn.commit()
     elif option == '3':
@@ -256,8 +258,9 @@ def handle_optionA(option):
         if InputHandler.error:
             print(InputHandler.message)
         else:
+            encrypted_username = encrypt(n_username)
             query = '''UPDATE users SET Username = ? WHERE Username = ?'''
-            cursor.execute(query, (n_username, updatemem))
+            cursor.execute(query, (encrypted_username, updatemem))
             print("Successfully updated to:", n_username)
             conn.commit()
 
