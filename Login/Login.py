@@ -109,24 +109,21 @@ def handle_option(option):
         if login("SuperAdmin"):
             print("Welcome, Super Administrator!")
             SuperPage.display_menuA()
-            user_input = input("Select an option: ")
-            SuperPage.handle_optionA(user_input)
+
 
     elif option == '2':
         print("You selected Log in as System Administrator.")
         if login2("SystemAdmin"):
             print("Welcome, System Administrator!")
             SystemPage.display_menuB()
-            user_input = input("Select an option: ")
-            SystemPage.handle_optionB(user_input)
+
 
     elif option == '3':
         print("You selected Log in as Consultant.")
         if login("Consultant"):
             print("Welcome, Consultant!")
             ConsultantPage.display_menuC()
-            user_input = input("Select an option: ")
-            ConsultantPage.handle_optionC(user_input)
+
     
     elif option == '4':
         print("* " * 20)
@@ -136,6 +133,7 @@ def handle_option(option):
     
     else:
         print("Invalid option. Please try again.")
+
 
 def Loginmain():
     # Initialize logging
