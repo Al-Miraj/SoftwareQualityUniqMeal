@@ -23,25 +23,41 @@ def display_menuA():
     "17: Exit program"
     )
 
+    user_input = input("Select an option: ")
+    handle_optionA(user_input)
+    
+
+
+
+
 def handle_optionA(option):
     if option == '1':
         InputDef.CheckList()
+        display_menuA()
     elif option == '2':
         InputDef.AddConsultant()
+        display_menuA()
     elif option == '3':
         InputDef.UpdateConsultant()
+        display_menuA()
     elif option == '4':
         InputDef.Deleteconsultant()
+        display_menuA()
     elif option == '5':
         InputDef.ResetconsultantPassword()
+        display_menuA()
     elif option == '6':
         InputDef.AddSystemAdmin()
+        display_menuA()
     elif option == '7':
         InputDef.UpdateSystemAdmin()
+        display_menuA()
     elif option == '8':
         InputDef.DeleteSystemAdmin()
+        display_menuA()
     elif option == '9':
         InputDef.ResetadminPassword()
+        display_menuA()
     elif option == '10':
         pass
     elif option == '11':
@@ -50,12 +66,16 @@ def handle_optionA(option):
         pass
     elif option == '13':
         InputDef.AddMember()
+        display_menuA()
     elif option == '14':
         InputDef.UpdateMember()
+        display_menuA()
     elif option == '15':
         InputDef.Deletemember()
+        display_menuA()
     elif option == '16':
         InputDef.searchMember()
+        display_menuA()
     elif option == '17':
         print("Exiting...")
         exit(0)
