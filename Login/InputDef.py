@@ -29,6 +29,8 @@ def CheckList():
         input("Press enter to go back.. ")
         break
 
+    logging.info("User printed checklist")
+
     
 
 def AddConsultant():
@@ -61,6 +63,7 @@ def AddConsultant():
     system_admin.AddNewConsultant(encrypted_username, hashed_password, encrypted_firstName, encrypted_lastName)
 
     print("Consultant added successfully.")
+
     
 
 def handle_optionM(option):
@@ -78,6 +81,7 @@ def handle_optionM(option):
             query = '''UPDATE users SET FirstName = ? WHERE FirstName = ?'''
             cursor.execute(query, (encrypted_firstName, updatemem))
             print("Successfully updated to:", n_name)
+            logging.info("Successfully updated to:", n_name)
             conn.commit()
     elif option == '2':
         updatemem = input("Type the last name of the Consultant you want to update: ")
@@ -90,6 +94,7 @@ def handle_optionM(option):
             query = '''UPDATE users SET LastName = ? WHERE LastName = ?'''
             cursor.execute(query, (encrypted_lastName, updatemem))
             print("Successfully updated to:", n_lname)
+            logging.info("Successfully updated to:", n_lname)
             conn.commit()
     elif option == '3':
         updatemem = input("Type the username of the Consultant you want to update: ")
@@ -101,6 +106,7 @@ def handle_optionM(option):
             query = '''UPDATE users SET Username = ? WHERE Username = ?'''
             cursor.execute(query, (encrypted_userName, updatemem))
             print("Successfully updated to:", n_username)
+            logging.info("Successfully updated to:", n_username)
             conn.commit()
 
 def Deleteconsultant():
@@ -117,8 +123,10 @@ def Deleteconsultant():
         # Check if any row was affected
         if cursor.rowcount == 1:
             print(f"Successfully deleted consultant {username}")
+            logging.info(f"Successfully deleted consultant {username}")
         else:
             print(f"Consultant {username} not found or unable to delete.")
+            logging.info(f"Consultant {username} not found or unable to delete.")
             
         # Commit the transaction
         conn.commit()
@@ -126,6 +134,7 @@ def Deleteconsultant():
     except Exception as e:
         # Handle any errors that occur during the deletion process
         print(f"Error deleting consultant: {str(e)}")
+        logging.info(f"Error deleting consultant: {str(e)}")
     
     finally:
         # Close cursor and connection
@@ -161,6 +170,7 @@ def ResetconsultantPassword():
         # Update the user's password in the database
         DBConfig.usersDAO.UpdateUserPassword(username, consToResetPW[1], hashed_password)
         print(f"Successfully updated password for: {username}")
+        logging.info(f"Successfully updated password for: {username}")
         
         
         # Commit the transaction
@@ -169,6 +179,7 @@ def ResetconsultantPassword():
     except Exception as e:
         # Handle any exceptions that occur
         print(f"Error resetting password: {str(e)}")
+        logging.info(f"Error resetting password: {str(e)}")
     
     finally:
         # Close cursor and connection
@@ -205,6 +216,7 @@ def AddSystemAdmin():
     super_admin.AddNewSystemAdmin(encrypted_username, hashed_password, encrypted_firstName, encrypted_lastName)
 
     print("Admin added successfully.")
+    logging.info("Admin added successfully.")
 
     conn.close()
 
@@ -239,6 +251,7 @@ def handle_optionA(option):
             query = '''UPDATE users SET FirstName = ? WHERE FirstName = ?'''
             cursor.execute(query, (encrypted_username, updatemem))
             print("Successfully updated to:", n_name)
+            logging.info("Admin first name updated successfully.")
             conn.commit()
     elif option == '2':
         updatemem = input("Type the last name of the Admin you want to update: ")
@@ -251,6 +264,7 @@ def handle_optionA(option):
             query = '''UPDATE users SET LastName = ? WHERE LastName = ?'''
             cursor.execute(query, (encrypted_lastName, updatemem))
             print("Successfully updated to:", n_lname)
+            logging.info("Admin last name updated successfully.")
             conn.commit()
     elif option == '3':
         updatemem = input("Type the username of the Admin you want to update: ")
@@ -262,6 +276,7 @@ def handle_optionA(option):
             query = '''UPDATE users SET Username = ? WHERE Username = ?'''
             cursor.execute(query, (encrypted_username, updatemem))
             print("Successfully updated to:", n_username)
+            logging.info("Admin username updated successfully.")
             conn.commit()
 
 
@@ -281,8 +296,10 @@ def DeleteSystemAdmin():
         # Check if any row was affected
         if cursor.rowcount == 1:
             print(f"Successfully deleted Systemadmin {username}")
+            logging.info(f"Systemadmin {username} deleted successfully.")
         else:
             print(f"SystemAdmin {username} not found or unable to delete.")
+            logging.info(f"SystemAdmin {username} not found or unable to delete.")
             
         # Commit the transaction
         conn.commit()
@@ -290,6 +307,7 @@ def DeleteSystemAdmin():
     except Exception as e:
         # Handle any errors that occur during the deletion process
         print(f"Error deleting admin: {str(e)}")
+        logging.info(f"Error deleting admin: {str(e)}")
     
     finally:
         # Close cursor and connection
@@ -326,6 +344,7 @@ def ResetadminPassword():
         # Update the user's password in the database
         DBConfig.usersDAO.UpdateUserPassword(username, systAdminToResetPW[1], hashed_password)
         print(f"Successfully updated password for: {username}")
+        logging.info(f"Password updated for: {username}")
         
         
         # Commit the transaction
@@ -370,6 +389,7 @@ def AddMember():
     DBConfig.membersDAO.InsertMembers([newMember])
 
     print("Member added successfully.")
+    logging.info("Member added successfully.")
 
     conn.close()
 
@@ -392,47 +412,140 @@ def updateMenu2():
     "8: Update Zip Code \n" + 
     "9: Update City \n" + 
     "10: Update Email adress \n" + 
-    "11: Update Phone number \n" + 
-    "12: Exit " 
+    "11: Update Phone number"
 
 )
 
-# def handle_option2(option):
-#     conn = DBConfig.dcm.conn
-#     cursor = conn.cursor()
+def handle_option2(option):
+    conn = DBConfig.dcm.conn
+    cursor = conn.cursor()
     
-#     if option == '1':
-#         updatemem = input("Type the first name of the Admin you want to update: ")
-#         n_name = input("Update first name: ")
-#         check_name = InputHandler.checkFirstName(n_name)
-#         if InputHandler.error:
-#             print(InputHandler.message)
-#         else:
-#             query = '''UPDATE users SET FirstName = ? WHERE FirstName = ?'''
-#             cursor.execute(query, (n_name, updatemem))
-#             print("Successfully updated to:", n_name)
-#             conn.commit()
-#     elif option == '2':
-#         updatemem = input("Type the last name of the Admin you want to update: ")
-#         n_lname = input("Update last name: ")
-#         check_lname = InputHandler.checkLastName(n_lname)
-#         if InputHandler.error:
-#             print(InputHandler.message)
-#         else:
-#             query = '''UPDATE users SET LastName = ? WHERE LastName = ?'''
-#             cursor.execute(query, (n_lname, updatemem))
-#             print("Successfully updated to:", n_lname)
-#             conn.commit()
-#     elif option == '3':
-#         updatemem = input("Type the username of the Admin you want to update: ")
-#         n_username = input("Update username: ")
-#         if InputHandler.error:
-#             print(InputHandler.message)
-#         else:
-#             query = '''UPDATE users SET Username = ? WHERE Username = ?'''
-#             cursor.execute(query, (n_username, updatemem))
-#             print("Successfully updated to:", n_username)
-#             conn.commit()
+    if option == '1':
+        updatemem = input("Type the first name of the Admin you want to update: ")
+        n_name = input("Update first name: ")
+        check_name = InputHandler.checkFirstName(n_name)
+        if InputHandler.error:
+            print(InputHandler.message)
+        else:
+            query = '''UPDATE users SET FirstName = ? WHERE FirstName = ?'''
+            cursor.execute(query, (n_name, updatemem))
+            print("Successfully updated to:", n_name)
+            conn.commit()
+    elif option == '2':
+        updatemem = input("Type the last name of the Admin you want to update: ")
+        n_lname = input("Update last name: ")
+        check_lname = InputHandler.checkLastName(n_lname)
+        if InputHandler.error:
+            print(InputHandler.message)
+        else:
+            query = '''UPDATE users SET LastName = ? WHERE LastName = ?'''
+            cursor.execute(query, (n_lname, updatemem))
+            print("Successfully updated to:", n_lname)
+            conn.commit()
+    elif option == '3':
+        updatemem = input("Type the age of the member you want to update: ")
+        age1 = input("Update age: ")
+        if InputHandler.error:
+            print(InputHandler.message)
+        else:
+            query = '''UPDATE users SET Age = ? WHERE Age = ?'''
+            cursor.execute(query, (age1, updatemem))
+            print("Successfully updated to:", age1)
+            conn.commit()
+
+    elif option == '4':
+        updatemem = input("Type the gender you want to update: ")
+        gender1 = input("Update gender: ")
+        if InputHandler.error:
+            print(InputHandler.message)
+        else:
+            query = '''UPDATE users SET Gender = ? WHERE Gender = ?'''
+            cursor.execute(query, (gender1, updatemem))
+            print("Successfully updated to:", gender1)
+            conn.commit()
+
+    elif option == '5':
+        updatemem = input("Type the weight you want to update: ")
+        weight1 = input("Update weight: ")
+        if InputHandler.error:
+            print(InputHandler.message)
+        else:
+            query = '''UPDATE users SET Weight = ? WHERE Weight = ?'''
+            cursor.execute(query, (weight1, updatemem))
+            print("Successfully updated to:", weight1)
+            conn.commit()
+
+    elif option == '6':
+        updatemem = input("Type the Street you want to update: ")
+        street1 = input("Update username: ")
+        if InputHandler.error:
+            print(InputHandler.message)
+        else:
+            query = '''UPDATE users SET Street = ? WHERE Street = ?'''
+            cursor.execute(query, (street1, updatemem))
+            print("Successfully updated to:", street1)
+            conn.commit()
+
+    elif option == '7':
+        updatemem = input("Type the house number you want to update: ")
+        house1 = input("Update username: ")
+        if InputHandler.error:
+            print(InputHandler.message)
+        else:
+            query = '''UPDATE users SET HouseNumber = ? WHERE HouseNumber = ?'''
+            cursor.execute(query, (house1, updatemem))
+            print("Successfully updated to:", house1)
+            conn.commit()
+
+    elif option == '8':
+        updatemem = input("Type the Zipcode you want to update: ")
+        zipcode1 = input("Update username: ")
+        if InputHandler.error:
+            print(InputHandler.message)
+        else:
+            query = '''UPDATE users SET ZipCode = ? WHERE ZipCode = ?'''
+            cursor.execute(query, (zipcode1, updatemem))
+            print("Successfully updated to:", zipcode1)
+            conn.commit()
+
+    
+    elif option == '9':
+        updatemem = input("Type the city you want to update: ")
+        city1 = input("Update username: ")
+        if InputHandler.error:
+            print(InputHandler.message)
+        else:
+            query = '''UPDATE users SET City = ? WHERE City = ?'''
+            cursor.execute(query, (City, updatemem))
+            print("Successfully updated to:", City)
+            conn.commit()
+
+
+    elif option == '10':
+        updatemem = input("Type the Email you want to update: ")
+        email1 = input("Update username: ")
+        if InputHandler.error:
+            print(InputHandler.message)
+        else:
+            query = '''UPDATE users SET EmailAdress = ? WHERE EmailAdress = ?'''
+            cursor.execute(query, (email1, updatemem))
+            print("Successfully updated to:", email1)
+            conn.commit()
+
+    elif option == '11':
+        updatemem = input("Type the phone you want to update: ")
+        phone1 = input("Update username: ")
+        if InputHandler.error:
+            print(InputHandler.message)
+        else:
+            query = '''UPDATE users SET PhoneNumber = ? WHERE PhoneNumber = ?'''
+            cursor.execute(query, (phone1, updatemem))
+            print("Successfully updated to:", phone1)
+            conn.commit()
+
+
+
+
     
 
 
