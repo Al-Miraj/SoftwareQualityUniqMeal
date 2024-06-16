@@ -49,6 +49,7 @@ def handle_optionB(option):
         pass
     elif option == '9':
         LOG.getLog()
+        display_menuB()
     elif option == '10':
         InputDef.AddMember()
         display_menuB()

@@ -65,6 +65,7 @@ def handle_optionA(option):
         pass
     elif option == '12':
         LOG.getLog()
+        display_menuA()
     elif option == '13':
         InputDef.AddMember()
         display_menuA()

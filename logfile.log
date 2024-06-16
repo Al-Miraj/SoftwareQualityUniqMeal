@@ -1,0 +1,13 @@
+2024-06-16 23:34:05,953 : INFO : Login.py : Application started.
+2024-06-16 23:34:16,577 : INFO : Login.py : Successful login attempt for user1.
+2024-06-16 23:36:07,156 : INFO : Login.py : Application started.
+2024-06-16 23:36:15,404 : INFO : Login.py : Successful login attempt for user1.
+2024-06-16 23:36:42,592 : INFO : InputDef.py : User printed checklist
+2024-06-16 23:38:51,972 : INFO : Login.py : Application started.
+2024-06-16 23:39:01,699 : INFO : Login.py : User username1 does not exist.
+2024-06-16 23:39:07,416 : INFO : Login.py : User selected option password1.
+
+2024-06-16 23:39:07,417 : INFO : Login.py : Application exited.
+2024-06-16 23:39:09,465 : INFO : Login.py : Application started.
+2024-06-16 23:39:22,302 : INFO : Login.py : Successful login attempt for user1.
+2024-06-16 23:39:30,832 : INFO : InputDef.py : User printed checklist
