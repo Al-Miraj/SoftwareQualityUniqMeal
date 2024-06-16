@@ -11,9 +11,11 @@ from argon2 import PasswordHasher
 from Roles.User import User
 from Roles.Member import Member
 from argon2.exceptions import VerifyMismatchError
+from cryptography.fernet import Fernet
+from CryptUtils.CryptoManager import encrypt, decrypt
 import logging
 
-
+ph = PasswordHasher()
 
 def CheckList():
     conn = DBConfig.dcm.conn
@@ -23,7 +25,9 @@ def CheckList():
     cursor.execute(query)
     result = cursor.fetchall()
     for user, role in result:
-        print(f"Username: {user}, Role: {role}")
+        print(f"Username: {user}, Role: {role}\n")
+        input("Press enter to go back.. ")
+        break
 
     
 
@@ -40,27 +44,23 @@ def AddConsultant():
     if not username or not password or not firstName or not lastName:
         print("All fields are required. Please try again.")
         return
+    
+    if not InputHandler.checkUsernameFormat(username) or \
+        not InputHandler.checkPasswordFormat(password) or \
+        not InputHandler.checkFirstName(firstName) or \
+        not InputHandler.checkLastName(lastName):
+            return
+    
+    encrypted_username = encrypt(username)
+    hashed_password = ph.hash(password)
+    encrypted_firstName = encrypt(firstName)
+    encrypted_lastName = encrypt(lastName)
 
     # Use placeholder values for SystemAdmin initialization
     system_admin = SystemAdmin('placeholder_user', 'placeholder_pass', 'placeholder_first', 'placeholder_last')
-    system_admin.AddNewConsultant(username, password, firstName, lastName)
+    system_admin.AddNewConsultant(encrypted_username, hashed_password, encrypted_firstName, encrypted_lastName)
 
     print("Consultant added successfully.")
-
-    
-
-def UpdateConsultant():
-    updateMenu()
-    option = input("Select an option: ")
-    handle_option(option)
-
-def updateMenu():
-    print(
-    "Update Menu\n" +
-    "1: Update first name \n" +
-    "2: Update Last name \n" + 
-    "3: Update username" 
-    )
     
 
 def handle_optionM(option):
@@ -74,8 +74,9 @@ def handle_optionM(option):
         if InputHandler.error:
             print(InputHandler.message)
         else:
+            encrypted_firstName = encrypt(n_name)
             query = '''UPDATE users SET FirstName = ? WHERE FirstName = ?'''
-            cursor.execute(query, (n_name, updatemem))
+            cursor.execute(query, (encrypted_firstName, updatemem))
             print("Successfully updated to:", n_name)
             conn.commit()
     elif option == '2':
@@ -85,8 +86,9 @@ def handle_optionM(option):
         if InputHandler.error:
             print(InputHandler.message)
         else:
+            encrypted_lastName = encrypt(n_lname)
             query = '''UPDATE users SET LastName = ? WHERE LastName = ?'''
-            cursor.execute(query, (n_lname, updatemem))
+            cursor.execute(query, (encrypted_lastName, updatemem))
             print("Successfully updated to:", n_lname)
             conn.commit()
     elif option == '3':
@@ -95,8 +97,9 @@ def handle_optionM(option):
         if InputHandler.error:
             print(InputHandler.message)
         else:
+            encrypted_userName = encrypt(n_lname)
             query = '''UPDATE users SET Username = ? WHERE Username = ?'''
-            cursor.execute(query, (n_username, updatemem))
+            cursor.execute(query, (encrypted_userName, updatemem))
             print("Successfully updated to:", n_username)
             conn.commit()
 
@@ -109,7 +112,7 @@ def Deleteconsultant():
     
     try:
         # Execute the delete operation based on username
-        cursor.execute('''DELETE FROM users WHERE UserName = ?''', (username,))
+        cursor.execute('''DELETE FROM users WHERE UserName = ?''', (username))
         
         # Check if any row was affected
         if cursor.rowcount == 1:
@@ -185,10 +188,21 @@ def AddSystemAdmin():
     if not username or not password or not firstName or not lastName:
         print("All fields are required. Please try again.")
         return
+    
+    if not InputHandler.checkUsernameFormat(username) or \
+        not InputHandler.checkPasswordFormat(password) or \
+        not InputHandler.checkFirstName(firstName) or \
+        not InputHandler.checkLastName(lastName):
+            return
+    
+    encrypted_username = encrypt(username)
+    hashed_password = ph.hash(password)
+    encrypted_firstName = encrypt(firstName)
+    encrypted_lastName = encrypt(lastName)
 
     # Use placeholder values for SystemAdmin initialization
     super_admin = SuperAdmin('placeholder_user', 'placeholder_pass', 'placeholder_first', 'placeholder_last')
-    super_admin.AddNewSystemAdmin(username, password, firstName, lastName)
+    super_admin.AddNewSystemAdmin(encrypted_username, hashed_password, encrypted_firstName, encrypted_lastName)
 
     print("Admin added successfully.")
 
@@ -346,6 +360,8 @@ def AddMember():
     if not firstName or not lastName or not age or not gender or not weight or not street or not houseNumber or not zipCode or not city or not email or not phoneNumber:
         print("All fields are required. Please try again.")
         return
+    
+    
 
     newMember = Member(firstName, lastName, age, gender, weight, street, houseNumber, zipCode, city, email, phoneNumber)
     DBConfig.membersDAO.InsertMembers([newMember])
