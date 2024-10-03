@@ -30,6 +30,28 @@ suggestion for good input validation:
     - perform authorization tests along with input validation
     - pattern matching with RegEx
 
+
+
+C R I T E R I A
+    - proper error messages
+    - authentication data are stored in an encrypted file using proper mechanism Q?
+    - passwords are hashed
+    - authorization is implemented based on user roles and is centrilized
+    - no bugs or major problems
+    - authentication has secure recovery mechanism
+    - protected against multiple wrong tries
+    - authorization is fully implemented based on user actions, w/o bugs or major problems
+
+    - input validation is complete for all input types does not allow bypassing
+    - whitelisitng is used for all inputs without any flaw
+    - no bug or error
+    - IV fully implemented and following good practices such as
+        - checking for null bytes, range and length validation fucntions etc.
+
+    - invalid inputs are properly handled w/o bugs or major problems
+    - following good practice in response to differt types of inputs
+
+    - logging...
 '''
 
 
@@ -112,7 +134,7 @@ class InputHandler:
 
 
     @staticmethod
-    def checkPasswordFormat(password:str)->bool:
+    def checkPasswordFormat(password:str)->bool: #\0
         if (12 <= len(password) <= 30):
             if (re.search(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[~!@#$%&_\-+=`|\(){}[\]:;'<>,.?\/])[A-Za-z0-9~!@#$%&_\-+=`|\(){}[\]:;'<>,.?\/]{12,30}$", password)):
                 return True
@@ -274,7 +296,7 @@ class InputHandler:
         return re.search(r'^\d{4}[A-Za-z]{2}$', zipcode)
 
 
-    # @staticmethod
+    # @staticmethod XXXXXXXXXXX
     # def checkCityFormat(city:str)->bool:
     #     correctFormat = True
     #     if city not in InputHandler.Cities:
