@@ -13,3 +13,16 @@ Roles/__pycache__/SuperAdmin.cpython-310.pyc
 Roles/__pycache__/SystemAdmin.cpython-310.pyc
 Roles/__pycache__/User.cpython-310.pyc
 
+InputHandler\__pycache__\InputHandler.cpython-310.pyc
+Login\__pycache__\ConsultantPage.cpython-310.pyc
+Login\__pycache__\InputDef.cpython-310.pyc
+Login\__pycache__\LOG.cpython-310.pyc
+Login\__pycache__\Login.cpython-310.pyc
+Login\__pycache__\SuperPage.cpython-310.pyc
+Login\__pycache__\SystemPage.cpython-310.pyc
+
+# Ignore all __pycache__ directories
+**/__pycache__/
+
+# Ignore all .pyc files
+*.pyc
