@@ -139,7 +139,7 @@ class InputHandler:
 
     @staticmethod
     def checkPasswordFormat(password:str)->bool: #\0
-        if InputHandler.nullByteIsAbsent(username):
+        if InputHandler.nullByteIsAbsent(password):
             if (12 <= len(password) <= 30):
                 if (re.search(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[~!@#$%&_\-+=`|\(){}[\]:;'<>,.?\/])[A-Za-z0-9~!@#$%&_\-+=`|\(){}[\]:;'<>,.?\/]{12,30}$", password)):
                     return True
@@ -161,7 +161,7 @@ class InputHandler:
 
     @staticmethod
     def checkFirstName(firstName:str)->bool:
-        if InputHandler.nullByteIsAbsent(username):
+        if InputHandler.nullByteIsAbsent(firstName):
             if (1<= len(firstName) <= 25):
                 if re.search(r'^[\sa-zA-Z\'-]+$', firstName):
                     return True
@@ -181,7 +181,7 @@ class InputHandler:
 
     @staticmethod
     def checkLastName(lastName:str)->bool:
-        if InputHandler.nullByteIsAbsent(username):
+        if InputHandler.nullByteIsAbsent(lastName):
             if (1<= len(lastName) <= 25):
                 if re.search(r'^[\sa-zA-Z\'-]+$', lastName):
                     return True
@@ -203,7 +203,7 @@ class InputHandler:
     @staticmethod
     def checkEmailFormat(email:str)->bool:
         emaillw = email.lower()
-        if InputHandler.nullByteIsAbsent(username):
+        if InputHandler.nullByteIsAbsent(email):
             if (5 <= len(emaillw) <= 320):
                 if re.search(r"^(?!\.)(?!.*\.\.)(?!.*--)(?!.*__)(?!.*_$)(?!.*-$)[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,63}$", emaillw):
                     return True
@@ -225,7 +225,7 @@ class InputHandler:
 
     @staticmethod
     def checkAgeFormat(age: str) -> bool:
-        if InputHandler.nullByteIsAbsent(username):
+        if InputHandler.nullByteIsAbsent(age):
             if re.search(r'^\d{2,3}$', age):
                 if (18 <= int(age) <= 130):
                     return True
@@ -242,7 +242,7 @@ class InputHandler:
 
     @staticmethod
     def checkGenderFormat(gender:str)->bool:
-        if InputHandler.nullByteIsAbsent(username):
+        if InputHandler.nullByteIsAbsent(gender):
             if re.search(r'^(M|F)$', gender):
                 return True
         return False
@@ -261,7 +261,7 @@ class InputHandler:
 
     @staticmethod
     def checkWeightFormat(weight:str)->bool:
-        if InputHandler.nullByteIsAbsent(username):
+        if InputHandler.nullByteIsAbsent(weight):
             if re.search(r'^[0-9]+([\.||\,][0-9]{1,2})?$', weight):
                 if (0 < float(weight) <= 500):
                     return True
@@ -279,7 +279,7 @@ class InputHandler:
     
     @staticmethod
     def checkStreetFormat(street:str)->bool:
-        if InputHandler.nullByteIsAbsent(username):
+        if InputHandler.nullByteIsAbsent(street):
             if re.search(r"^(?=.*[A-Za-z])(?!.*[^A-Za-z0-9\-\. ])$", street):
                 return True
         return False
@@ -296,7 +296,7 @@ class InputHandler:
 
     @staticmethod
     def checkHouseNumberFormat(houseNumber:str)->bool:
-        if InputHandler.nullByteIsAbsent(username):
+        if InputHandler.nullByteIsAbsent(houseNumber):
             if re.search(r'^\d{1,5}[A-Za-z]?$', houseNumber):
                 return True
         return False
@@ -312,7 +312,7 @@ class InputHandler:
 
     @staticmethod        
     def checkZipCodeFormat(zipcode:str)->bool:
-        if InputHandler.nullByteIsAbsent(username):
+        if InputHandler.nullByteIsAbsent(zipcode):
             if re.search(r'^\d{4}[A-Za-z]{2}$', zipcode):
                 return True
         return False
@@ -328,7 +328,7 @@ class InputHandler:
 
     @staticmethod
     def checkCityFormat(city:str)->bool:
-        if InputHandler.nullByteIsAbsent(username):
+        if InputHandler.nullByteIsAbsent(city):
             if city in InputHandler.Cities:
                 return True
         return False
@@ -344,7 +344,7 @@ class InputHandler:
 
     @staticmethod 
     def checkPhoneNumberFormsat(phoneNumber:str)->bool:
-        if InputHandler.nullByteIsAbsent(username):
+        if InputHandler.nullByteIsAbsent(phoneNumber):
             if re.search(r'^[+]31[-]6[-]\d{8}$', phoneNumber):
                 return True
         return False
