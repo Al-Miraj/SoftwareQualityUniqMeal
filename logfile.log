@@ -11,3 +11,52 @@
 2024-06-16 23:39:09,465 : INFO : Login.py : Application started.
 2024-06-16 23:39:22,302 : INFO : Login.py : Successful login attempt for user1.
 2024-06-16 23:39:30,832 : INFO : InputDef.py : User printed checklist
+2024-10-09 15:37:28,719 : INFO : Login.py : Application started.
+2024-10-09 15:38:07,747 : INFO : Login.py : User First2 does not exist.
+2024-10-09 15:38:09,432 : INFO : Login.py : User selected option d.
+
+2024-10-09 15:38:09,433 : INFO : Login.py : Application exited.
+2024-10-10 14:58:00,675 : INFO : Login.py : Application started.
+2024-10-10 14:58:26,198 : INFO : Login.py : Failed login attempt for user1: The password does not match the supplied hash
+2024-10-10 14:58:44,391 : INFO : Login.py : User selected option 1.
+
+2024-10-10 14:59:04,361 : INFO : Login.py : User super_admin does not exist.
+2024-10-10 14:59:04,361 : INFO : Login.py : Application exited.
+2024-10-10 14:59:44,163 : INFO : Login.py : Application started.
+2024-10-10 14:59:51,880 : INFO : Login.py : Successful login attempt for user1.
+2024-10-10 15:00:53,472 : INFO : Login.py : Application started.
+2024-10-10 15:00:58,826 : INFO : Login.py : Successful login attempt for user1.
+2024-10-10 15:09:26,867 : INFO : Login.py : User selected option 17.
+
+2024-10-10 15:09:26,867 : INFO : Login.py : Application exited.
+2024-10-10 15:09:31,120 : INFO : Login.py : Application started.
+2024-10-10 15:09:42,716 : INFO : Login.py : User consultant1 does not exist.
+2024-10-10 15:09:46,394 : INFO : Login.py : User selected option 1.
+
+2024-10-10 15:09:52,272 : INFO : Login.py : Successful login attempt for user1.
+2024-10-10 15:10:12,526 : INFO : InputDef.py : User printed checklist
+2024-10-10 15:10:40,505 : INFO : Login.py : Application started.
+2024-10-10 15:10:51,680 : INFO : Login.py : User consultant3 does not exist.
+2024-10-10 15:10:56,418 : INFO : Login.py : User selected option .
+
+2024-10-10 15:10:56,418 : INFO : Login.py : Application exited.
+2024-10-10 15:11:13,794 : INFO : Login.py : Application started.
+2024-10-10 15:35:08,005 : INFO : Login.py : Failed login attempt for user1: The password does not match the supplied hash
+2024-10-10 15:35:11,896 : INFO : Login.py : User selected option password1.
+
+2024-10-10 15:35:11,906 : INFO : Login.py : Application exited.
+2024-10-10 15:35:18,024 : INFO : Login.py : Application started.
+2024-10-10 15:35:20,339 : INFO : Login.py : User selected option 1.
+
+2024-10-10 15:35:25,254 : INFO : Login.py : Successful login attempt for user1.
+2024-10-10 15:36:25,992 : INFO : Login.py : Application started.
+2024-10-10 15:36:33,673 : INFO : Login.py : Successful login attempt for user1.
+2024-10-10 15:58:15,637 : INFO : Login.py : Application started.
+2024-10-10 15:58:42,344 : INFO : Login.py : Successful login attempt for user1.
+2024-10-10 16:00:38,954 : INFO : Login.py : Application started.
+2024-10-10 16:00:49,682 : INFO : Login.py : User user does not exist.
+2024-10-10 16:00:51,118 : INFO : Login.py : User selected option 1.
+
+2024-10-10 16:00:57,082 : INFO : Login.py : Successful login attempt for user1.
+2024-10-10 16:01:17,591 : INFO : Login.py : Application started.
+2024-10-10 16:01:22,028 : INFO : Login.py : Successful login attempt for user1.
