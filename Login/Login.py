@@ -1,6 +1,7 @@
-import logging
 import os
 import sqlite3
+import getpass
+import sys
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError, VerificationError
 from Database.DBConfig import DBConfig
@@ -8,6 +9,11 @@ from . import ConsultantPage
 from . import SystemPage
 from . import SuperPage
 from . import LOG
+from Login.LOG import get_logger
+
+
+
+logger = get_logger()
 
 ph = DBConfig.ph
 
@@ -25,7 +31,7 @@ def executeQuery(query, *args):
 
 def login(role):
     searchUsername = input("Enter username: ")
-    searchPassword = input("Enter password: ")
+    searchPassword = getpass.getpass("Enter password: ")
     print()
 
     try:
@@ -40,25 +46,25 @@ def login(role):
             # Verify password attempt
             try:
                 ph.verify(stored_hash, searchUsername + searchPassword)
-                logging.info(f"Successful login attempt for {searchUsername}.")
+                logger.info(f"Successful login attempt for {searchUsername}.", extra={"suspicious": "No"})
                 print("Login successful.")
                 print("* " * 20)
                 print("* " * 20)
                 return True, searchPassword, searchUsername
             except (VerifyMismatchError, VerificationError) as e:
-                logging.info(f"Failed login attempt for {searchUsername}: {str(e)}")
+                logger.info(f"Failed login attempt for {searchUsername}: {str(e)}", extra={"suspicious": "yes"})
                 print("Login incorrect.")
                 print("Invalid username/password combination. Please try again.")
-                return False
+                return False, None, None
         else:
-            logging.info(f"User {searchUsername} does not exist.")
+            logger.info(f"User {searchUsername} does not exist.", extra={"suspicious": "No"})
             print("Invalid username/password combination. Please try again.")
-            return False
+            return False, None, None
 
     except Exception as e:
-        logging.error(f"Error during login: {str(e)}")
+        logger.error(f"Error during login: {str(e)}")
         print(f"Error during login: {str(e)}")
-        return False
+        return False, None, None
 
 def login2(role):
     searchUsername = input("Enter username: ")
@@ -77,23 +83,23 @@ def login2(role):
             # Verify password attempt
             try:
                 ph.verify(stored_hash, searchPassword)
-                logging.info(f"Successful login attempt for {searchUsername}.")
+                logger.info(f"Successful login attempt for {searchUsername}.")
                 print("Login successful.")
                 print("* " * 20)
                 print("* " * 20)
                 return True, searchPassword, searchUsername
             except (VerifyMismatchError, VerificationError) as e:
-                logging.info(f"Failed login attempt for {searchUsername}: {str(e)}")
+                logger.info(f"Failed login attempt for {searchUsername}: {str(e)}", extra={"suspicious": "yes"})
                 print("Login incorrect.")
                 print("Invalid username/password combination. Please try again.")
                 return False
         else:
-            logging.info(f"User {searchUsername} does not exist.")
+            logger.info(f"User {searchUsername} does not exist.", extra={"suspicious": "yes"})
             print("Invalid username/password combination. Please try again.")
             return False
 
     except Exception as e:
-        logging.error(f"Error during login: {str(e)}")
+        logger.error(f"Error during login: {str(e)}", extra={"suspicious": "yes"})
         print(f"Error during login: {str(e)}")
         return False
 
@@ -108,48 +114,60 @@ def display_menu():
 def handle_option(option):
     if option == '1':
         print("You selected Log in as Super Administrator.\n")
-        if login("SuperAdmin"):
-            print("Welcome, Super Administrator!")
-            SuperPage.display_menuA()
-
+        login_success, password, username = login("SuperAdmin")  # Capture the username
+        if login_success:
+            print(f"Welcome, {username}!")
+            logger.info(f"{username} logged in.", extra={"suspicious": "No"})
+            SuperPage.display_menuA(username) 
+        else:
+            print("Invalid username/password combination. Please try again.")
+            display_menu()
 
     elif option == '2':
         print("You selected Log in as System Administrator.")
-        if login2("SystemAdmin"):
-            print("Welcome, System Administrator!")
-            SystemPage.display_menuB()
-
+        login_success, password, username = login("SystemAdmin")  # Capture the username
+        if login_success:
+            print(f"Welcome, {username}!")
+            logger.info(f"{username} logged in.", extra={"suspicious": "No"})
+            SystemPage.display_menuB(username)
+        else:
+            print("Invalid username/password combination. Please try again.")
+            display_menu()
 
     elif option == '3':
         print("You selected Log in as Consultant.")
-        if login("Consultant"):
-            print("Welcome, Consultant!")
-            ConsultantPage.display_menuC()
+        login_success, password, username = login("Consultant")  # Capture the username
+        if login_success:
+            print(f"Welcome, {username}!")
+            logger.info(f"{username} logged in." , extra={"suspicious": "No"})
+            ConsultantPage.display_menuC(username)
+        else:
+            print("Invalid username/password combination. Please try again.")
+            display_menu()
 
-    
     elif option == '4':
         print("* " * 20)
         print("Exiting...")
         print("* " * 20)
         return False
-    
+
     else:
         print("Invalid option. Please try again.")
 
 
 def Loginmain():
-    # Initialize logging
-    LOG.init_log()
-    logging.info("Application started.")
+    # Initialize logger
+    # LOG.init_log()
+    # logger.info("Application started.")
 
     # Loop for displaying menu and handling user input
     while True:
         display_menu()
         option = input("Select an option: ")
-        logging.info(f"User selected option {option}.\n")
+        logger.info(f"User selected option {option}.\n" , extra={"suspicious": "No"})
         if not handle_option(option):
             break
 
     # Close database connection
     DBConfig.dcm.disconnect()
-    logging.info("Application exited.")
+    logger.info("Application exited.",extra={"suspicious": "No"})

@@ -2,7 +2,7 @@ from Roles.SystemAdmin import SystemAdmin
 from . import InputDef
 from . import LOG
 
-def display_menuB():
+def display_menuB(username):
     print(
     "Admin\n" +
     "1: Update your password \n" + 
@@ -22,46 +22,46 @@ def display_menuB():
     )
 
     user_input = input("Select an option: ")
-    handle_optionB(user_input)
+    handle_optionB(user_input, username)
 
-def handle_optionB(option):
+def handle_optionB(option, username):
     if option == '1':
-        InputDef.PasswordRenew()
-        display_menuB()
+        InputDef.PasswordRenew(username)
+        display_menuB(username)
     elif option == '2':
-        InputDef.CheckList()
-        display_menuB()
+        InputDef.CheckList(username)
+        display_menuB(username)
     elif option == '3':
-        InputDef.AddConsultant()
-        display_menuB()
+        InputDef.AddConsultant(username)
+        display_menuB(username)
     elif option == '4':
-        InputDef.UpdateConsultant()
-        display_menuB()
+        InputDef.UpdateConsultant(username)
+        display_menuB(username)
     elif option == '5':
-        InputDef.DeleteConsultant()
-        display_menuB()
+        InputDef.DeleteConsultant(username)
+        display_menuB(username)
     elif option == '6':
-        InputDef.ResetConsultantPassword()
-        display_menuB()
+        InputDef.ResetConsultantPassword(username)
+        display_menuB(username)
     elif option == '7':
         pass
     elif option == '8':
         pass
     elif option == '9':
-        LOG.getLog()
-        display_menuB()
+        LOG.view_superadmin_logs()
+        display_menuB(username)
     elif option == '10':
-        InputDef.AddMember()
-        display_menuB()
+        InputDef.AddMember(username)
+        display_menuB(username)
     elif option == '11':
-        InputDef.UpdateMember()
-        display_menuB()
+        InputDef.UpdateMember(username)
+        display_menuB(username)
     elif option == '12':
-        InputDef.DeleteMember()
-        display_menuB()
+        InputDef.DeleteMember(username)
+        display_menuB(username)
     elif option == '13':
-        InputDef.SearchMember()
-        display_menuB()
+        InputDef.SearchMember(username)
+        display_menuB(username)
     elif option == '14':
         print("Exiting...")
         exit(0)

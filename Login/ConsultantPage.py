@@ -1,7 +1,7 @@
 from Roles.Consultant import Consultant
 from . import InputDef
 
-def display_menuC():
+def display_menuC(username):
     print(
     "Consultant\n" +
     "1: Update your password \n" + 
@@ -12,21 +12,21 @@ def display_menuC():
     )
 
     user_input = input("Select an option: ")
-    handle_optionC(user_input)
+    handle_optionC(user_input, username)
 
-def handle_optionC(option):
+def handle_optionC(option, username):
     if option == '1':
-        InputDef.PasswordRenew()
-        display_menuC()
+        InputDef.PasswordRenew(username)
+        display_menuC(username)
     elif option == '2':
-        InputDef.AddMember()
-        display_menuC()
+        InputDef.AddMember(username)
+        display_menuC(username)
     elif option == '3':
-        InputDef.UpdateMember()
-        display_menuC()
+        InputDef.UpdateMember(username)
+        display_menuC(username)
     elif option == '4':
-        InputDef.searchMember()
-        display_menuC()
+        InputDef.searchMember(username)
+        display_menuC(username)
     elif option == '5':
         print("Exiting...")
         exit(0)

@@ -1,7 +1,7 @@
 [
     {
-        "Username": "user1",
-        "Password": "password1",
+        "Username": "super_admin",
+        "Password": "Admin_123",
         "FirstName": "John",
         "LastName": "Doe",
         "RegistrationDate": "2024-06-12T09:00:00",
