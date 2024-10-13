@@ -44,7 +44,7 @@ import zipfile
 from datetime import datetime
 
 FILE_TO_BACKUP = 'Database/UniqueMealDB.db'
-LOG_FILE = 'Database/logfile.log'  # Path naar het logbestand !!!!!!!!!!!!!!!!!!
+LOG_FILE = 'superadmin_log.log'  # Path naar het logbestand !!!!!!!!!!!!!!!!!!
 
 class Backup:
 
