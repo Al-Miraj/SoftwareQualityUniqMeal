@@ -1,6 +1,7 @@
 from .Member import Member
 from .Consultant import Consultant
 from Database.DBConfig import DBConfig
+from Backup import Backup
 
 
 class SystemAdmin(Consultant):
@@ -30,12 +31,10 @@ class SystemAdmin(Consultant):
         DBConfig.usersDAO.UpdateUserPassword(username, consToResetPW[1], "temporaryC123") #todo should adhere to pw rules
     
     def MakeSystemBackup(self):
-        #wtf does this mean
-        pass
+        Backup.create_backup()
 
     def RestoreSystemBackup(self):
-        #wtf does this mean part 2
-        pass
+        Backup.restore_backup()
 
     def SeeLogFiles(self):
         #wtf does this mean part 3??????

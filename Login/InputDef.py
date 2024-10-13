@@ -13,27 +13,31 @@ from Roles.Member import Member
 from argon2.exceptions import VerifyMismatchError
 from cryptography.fernet import Fernet
 from CryptUtils.CryptoManager import encrypt, decrypt
-import logging
+from . import LOG
+from Login.LOG import get_logger
 
+logger = get_logger()
 ph = PasswordHasher()
 
-def CheckList():
+def CheckList(username):
     conn = DBConfig.dcm.conn
     cursor = conn.cursor()
 
     query = "SELECT Username, Role FROM users"
     cursor.execute(query)
     result = cursor.fetchall()
-    for user, role in result:
-        print(f"Username: {user}, Role: {role}\n")
-        input("Press enter to go back.. ")
-        break
 
-    logging.info("User printed checklist")
+    for a, b in result:
+        print(f"Username: {a}, Role: {b}\n")
+    
+    input("Press enter to go back.. ")
+
+    # Log the action with the username
+    logger.info(f"{username} printed checklist", extra={"username": username, "suspicious": "No"})
 
     
 
-def AddConsultant():
+def AddConsultant(username):
     conn = DBConfig.dcm.conn
     cursor = conn.cursor()
     print("Enter the following details to add a new consultant:")
@@ -51,6 +55,7 @@ def AddConsultant():
         not InputHandler.checkPasswordFormat(password) or \
         not InputHandler.checkFirstName(firstName) or \
         not InputHandler.checkLastName(lastName):
+            logger.info(f" {username} entered wrong input", extra={"username": username, "suspicious": "No"})
             return
     
     encrypted_username = encrypt(username)
@@ -63,10 +68,25 @@ def AddConsultant():
     system_admin.AddNewConsultant(encrypted_username, hashed_password, encrypted_firstName, encrypted_lastName)
 
     print("Consultant added successfully.")
+    logger.info(f"Consultant added successfully by {username}", extra={"username": username, "suspicious": "No"})
+
+
+def UpdateConsultant(username):
+    updateMenux()
+    option = input("Select an option: ")
+    handle_optionM(option, username)
+
+def updateMenux():
+    print(
+    "Update Menu for Consultant\n" +
+    "1: Update first name \n" +
+    "2: Update lastName name \n" + 
+    "3: Update username" 
+)
 
     
 
-def handle_optionM(option):
+def handle_optionM(option, username):
     conn = DBConfig.dcm.conn
     cursor = conn.cursor()
     
@@ -81,7 +101,7 @@ def handle_optionM(option):
             query = '''UPDATE users SET FirstName = ? WHERE FirstName = ?'''
             cursor.execute(query, (encrypted_firstName, updatemem))
             print("Successfully updated to:", n_name)
-            logging.info("Successfully updated to:", n_name)
+            logger.info(f"Successfully updated to:{ n_name} by {username}", extra={"username": username, "suspicious": "No"})
             conn.commit()
     elif option == '2':
         updatemem = input("Type the last name of the Consultant you want to update: ")
@@ -94,7 +114,7 @@ def handle_optionM(option):
             query = '''UPDATE users SET LastName = ? WHERE LastName = ?'''
             cursor.execute(query, (encrypted_lastName, updatemem))
             print("Successfully updated to:", n_lname)
-            logging.info("Successfully updated to:", n_lname)
+            logger.info(f"Successfully updated to: {n_lname} by {username}", extra={"username": username, "suspicious": "No"})
             conn.commit()
     elif option == '3':
         updatemem = input("Type the username of the Consultant you want to update: ")
@@ -106,27 +126,27 @@ def handle_optionM(option):
             query = '''UPDATE users SET Username = ? WHERE Username = ?'''
             cursor.execute(query, (encrypted_userName, updatemem))
             print("Successfully updated to:", n_username)
-            logging.info("Successfully updated to:", n_username)
+            logger.info(f"Successfully updated to:{n_username} by {username}", extra={"username": username, "suspicious": "No"})
             conn.commit()
 
-def Deleteconsultant():
+def Deleteconsultant(username):
     conn = DBConfig.dcm.conn
     cursor = conn.cursor()
     
     # Prompt user for the username of the consultant to delete
-    username = input("Enter the username of the consultant you want to delete: ")
+    username_D = input("Enter the username of the consultant you want to delete: ")
     
     try:
         # Execute the delete operation based on username
-        cursor.execute('''DELETE FROM users WHERE UserName = ?''', (username))
+        cursor.execute('''DELETE FROM users WHERE UserName = ?''', (username_D))
         
         # Check if any row was affected
         if cursor.rowcount == 1:
-            print(f"Successfully deleted consultant {username}")
-            logging.info(f"Successfully deleted consultant {username}")
+            print(f"Successfully deleted consultant {username_D}")
+            logger.info(f"Successfully deleted consultant {username_D} by {username}", extra={"username": username, "suspicious": "No"})
         else:
-            print(f"Consultant {username} not found or unable to delete.")
-            logging.info(f"Consultant {username} not found or unable to delete.")
+            print(f"Consultant {username_D} not found or unable to delete.")
+            logger.info(f"Consultant {username_D} not found or unable to delete by {username}", extra={"username": username, "suspicious": "No"})
             
         # Commit the transaction
         conn.commit()
@@ -134,7 +154,7 @@ def Deleteconsultant():
     except Exception as e:
         # Handle any errors that occur during the deletion process
         print(f"Error deleting consultant: {str(e)}")
-        logging.info(f"Error deleting consultant: {str(e)}")
+        logger.info(f"Error deleting consultant: {str(e)}", extra={"username": username, "suspicious": "yes"})
     
     finally:
         # Close cursor and connection
@@ -143,18 +163,18 @@ def Deleteconsultant():
 
 
 
-def ResetconsultantPassword():
+def ResetconsultantPassword(username):
     conn = DBConfig.dcm.conn
     cursor = conn.cursor()
     ph = PasswordHasher()
 
     try:
-        username = input("Enter the username of the consultant whose password you want to reset: ")
+        username_R = input("Enter the username of the consultant whose password you want to reset: ")
 
         # Check if the user exists
-        consToResetPW = DBConfig.usersDAO.SelectUser(username)
+        consToResetPW = DBConfig.usersDAO.SelectUser(username_R)
         if not consToResetPW:
-            print(f"Consultant {username} not found.")
+            print(f"Consultant {username_R} not found by {username}", extra={"username": username, "suspicious": "No"})
             return
         
         n_password = input("New password: ")
@@ -168,9 +188,9 @@ def ResetconsultantPassword():
         hashed_password = ph.hash(n_password)
 
         # Update the user's password in the database
-        DBConfig.usersDAO.UpdateUserPassword(username, consToResetPW[1], hashed_password)
-        print(f"Successfully updated password for: {username}")
-        logging.info(f"Successfully updated password for: {username}")
+        DBConfig.usersDAO.UpdateUserPassword(username_R, consToResetPW[1], hashed_password)
+        print(f"Successfully updated password for: {username_R}")
+        logger.info(f"Successfully updated password for: {username_R} by {username}", extra={"username": username, "suspicious": "No"})
         
         
         # Commit the transaction
@@ -179,34 +199,34 @@ def ResetconsultantPassword():
     except Exception as e:
         # Handle any exceptions that occur
         print(f"Error resetting password: {str(e)}")
-        logging.info(f"Error resetting password: {str(e)}")
+        logger.info(f"Error resetting password: {str(e)}", extra={"username": username, "suspicious": "yes"})
     
     finally:
         # Close cursor and connection
         cursor.close()
         conn.close()
 
-def AddSystemAdmin():
+def AddSystemAdmin(username):
     conn = DBConfig.dcm.conn
     cursor = conn.cursor()
     print("Enter the following details to add a new admin:")
         
-    username = input("Username: ").strip()
+    usernameinput = input("Username: ").strip()
     password = input("Password: ").strip()
     firstName = input("First Name: ").strip()
     lastName = input("Last Name: ").strip()
 
-    if not username or not password or not firstName or not lastName:
+    if not usernameinput or not password or not firstName or not lastName:
         print("All fields are required. Please try again.")
         return
     
-    if not InputHandler.checkUsernameFormat(username) or \
+    if not InputHandler.checkUsernameFormat(usernameinput) or \
         not InputHandler.checkPasswordFormat(password) or \
         not InputHandler.checkFirstName(firstName) or \
         not InputHandler.checkLastName(lastName):
             return
     
-    encrypted_username = encrypt(username)
+    encrypted_username = encrypt(usernameinput)
     hashed_password = ph.hash(password)
     encrypted_firstName = encrypt(firstName)
     encrypted_lastName = encrypt(lastName)
@@ -216,16 +236,16 @@ def AddSystemAdmin():
     super_admin.AddNewSystemAdmin(encrypted_username, hashed_password, encrypted_firstName, encrypted_lastName)
 
     print("Admin added successfully.")
-    logging.info("Admin added successfully.")
+    logger.info(f"Admin added successfully by {username}", extra={"username": username, "suspicious": "No"})
 
     conn.close()
 
 
 
-def UpdateSystemAdmin():
+def UpdateSystemAdmin(username):
     updateMenu1()
     option = input("Select an option: ")
-    handle_optionA(option)
+    handle_optionA(option, username)
 
 def updateMenu1():
     print(
@@ -236,7 +256,7 @@ def updateMenu1():
 )
     
 
-def handle_optionA(option):
+def handle_optionA(option, username):
     conn = DBConfig.dcm.conn
     cursor = conn.cursor()
     
@@ -251,7 +271,7 @@ def handle_optionA(option):
             query = '''UPDATE users SET FirstName = ? WHERE FirstName = ?'''
             cursor.execute(query, (encrypted_username, updatemem))
             print("Successfully updated to:", n_name)
-            logging.info("Admin first name updated successfully.")
+            logger.info(f"Admin first name updated successfully by {username}", extra={"username": username, "suspicious": "No"})
             conn.commit()
     elif option == '2':
         updatemem = input("Type the last name of the Admin you want to update: ")
@@ -263,8 +283,8 @@ def handle_optionA(option):
             encrypted_lastName = encrypt(n_lname)
             query = '''UPDATE users SET LastName = ? WHERE LastName = ?'''
             cursor.execute(query, (encrypted_lastName, updatemem))
-            print("Successfully updated to:", n_lname)
-            logging.info("Admin last name updated successfully.")
+            print(f"Successfully updated to:{n_lname}")
+            logger.info(f"Admin last name updated successfully by {username}", extra={"username": username, "suspicious": "No"})
             conn.commit()
     elif option == '3':
         updatemem = input("Type the username of the Admin you want to update: ")
@@ -276,30 +296,30 @@ def handle_optionA(option):
             query = '''UPDATE users SET Username = ? WHERE Username = ?'''
             cursor.execute(query, (encrypted_username, updatemem))
             print("Successfully updated to:", n_username)
-            logging.info("Admin username updated successfully.")
+            logger.info(f"Admin username updated successfully by {username}", extra={"username": username, "suspicious": "No"})
             conn.commit()
 
 
 
 
-def DeleteSystemAdmin():
+def DeleteSystemAdmin(username):
     conn = DBConfig.dcm.conn
     cursor = conn.cursor()
     
     # Prompt user for the username of the consultant to delete
-    username = input("Enter the username of the admin you want to delete: ")
+    usernameadmin = input("Enter the username of the admin you want to delete: ")
     
     try:
         # Execute the delete operation based on username
-        cursor.execute('''DELETE FROM users WHERE UserName = ?''', (username,))
+        cursor.execute('''DELETE FROM users WHERE UserName = ?''', (usernameadmin))
         
         # Check if any row was affected
         if cursor.rowcount == 1:
-            print(f"Successfully deleted Systemadmin {username}")
-            logging.info(f"Systemadmin {username} deleted successfully.")
+            print(f"Successfully deleted Systemadmin {usernameadmin}")
+            logger.info(f"Systemadmin {usernameadmin} deleted successfully.")
         else:
-            print(f"SystemAdmin {username} not found or unable to delete.")
-            logging.info(f"SystemAdmin {username} not found or unable to delete.")
+            print(f"SystemAdmin {usernameadmin} not found or unable to delete.")
+            logger.info(f"SystemAdmin {usernameadmin} not found or unable to delete by {username}", extra={"username": username, "suspicious": "No"})
             
         # Commit the transaction
         conn.commit()
@@ -307,7 +327,7 @@ def DeleteSystemAdmin():
     except Exception as e:
         # Handle any errors that occur during the deletion process
         print(f"Error deleting admin: {str(e)}")
-        logging.info(f"Error deleting admin: {str(e)}")
+        logger.info(f"Error deleting admin: {str(e)} by {username}", extra={"username": username, "suspicious": "Yes"})
     
     finally:
         # Close cursor and connection
@@ -317,18 +337,18 @@ def DeleteSystemAdmin():
 
 
 
-def ResetadminPassword():
+def ResetadminPassword(username):
     conn = DBConfig.dcm.conn
     cursor = conn.cursor()
     ph = PasswordHasher()
 
     try:
-        username = input("Enter the username of the consultant whose password you want to reset: ")
+        username_radmin= input("Enter the username of the consultant whose password you want to reset: ")
 
         # Check if the user exists
-        systAdminToResetPW = DBConfig.usersDAO.SelectUser(username)
+        systAdminToResetPW = DBConfig.usersDAO.SelectUser(username_radmin)
         if not systAdminToResetPW:
-            print(f"admin {username} not found.")
+            print(f"admin {username_radmin} not found.")
             return
         
         n_password = input("New password: ")
@@ -342,9 +362,9 @@ def ResetadminPassword():
         hashed_password = ph.hash(n_password)
 
         # Update the user's password in the database
-        DBConfig.usersDAO.UpdateUserPassword(username, systAdminToResetPW[1], hashed_password)
-        print(f"Successfully updated password for: {username}")
-        logging.info(f"Password updated for: {username}")
+        DBConfig.usersDAO.UpdateUserPassword(username_radmin, systAdminToResetPW[1], hashed_password)
+        print(f"Successfully updated password for: {username_radmin}")
+        logger.info(f"Password updated for: {username_radmin} by {username}", extra={"username": username, "suspicious": "No"})
         
         
         # Commit the transaction
@@ -360,44 +380,69 @@ def ResetadminPassword():
         conn.close()
 
 
-def AddMember():
+def AddMember(username):
     conn = DBConfig.dcm.conn
     cursor = conn.cursor()
-    print("Enter the following details to add a new Member")
-        
+    print("Enter the following details to add a new member:")
+
     firstName = input("First Name: ").strip()
     lastName = input("Last Name: ").strip()
-    age = int(input("Age: ").strip())
-    gender = input("Gender:").strip()
-    weight = int(input("weight:"))
+    age = input("Age: ").strip()  # keep age as string to validate first
+    gender = input("Gender (M/F): ").strip()
+    weight = input("Weight: ").strip()  # keep weight as string for validation
     street = input("Street: ").strip()
-    houseNumber = int(input("House Number: ").strip())
+    houseNumber = input("House Number: ").strip()  # keep as string for validation
     zipCode = input("Zip Code: ").strip()
     city = input("City: ").strip()
     email = input("Email: ").strip()
     phoneNumber = input("Phone Number: ").strip()
 
-
-
-    if not firstName or not lastName or not age or not gender or not weight or not street or not houseNumber or not zipCode or not city or not email or not phoneNumber:
-        print("All fields are required. Please try again.")
+    # Validate all fields using InputHandler methods
+    if not (InputHandler.checkFirstName(firstName) and
+            InputHandler.checkLastName(lastName) and
+            InputHandler.checkAgeFormat(age) and
+            InputHandler.checkGenderFormat(gender) and
+            InputHandler.checkWeightFormat(weight) and
+            InputHandler.checkStreetFormat(street) and
+            InputHandler.checkHouseNumberFormat(houseNumber) and
+            InputHandler.checkZipCodeFormat(zipCode) and
+            InputHandler.checkCityFormat(city) and
+            InputHandler.checkEmailFormat(email) and
+            InputHandler.checkPhoneNumberFormat(phoneNumber)):
+        print("One or more fields are invalid. Please check the details and try again.")
         return
-    
-    
 
-    newMember = Member(firstName, lastName, age, gender, weight, street, houseNumber, zipCode, city, email, phoneNumber)
+    # Encrypt sensitive data
+    encrypted_firstName = encrypt(firstName)
+    encrypted_lastName = encrypt(lastName)
+    encrypted_street = encrypt(street)
+    encrypted_city = encrypt(city)
+    encrypted_email = encrypt(email)
+    encrypted_phoneNumber = encrypt(phoneNumber)
+
+    # Convert age, weight, and house number to integers (validated already)
+    age = int(age)
+    weight = float(weight)  # support decimal numbers for weight
+    houseNumber = int(houseNumber)
+
+    # Create a new member object with encrypted data
+    newMember = Member(encrypted_firstName, encrypted_lastName, age, gender, weight, encrypted_street,
+                       houseNumber, zipCode, encrypted_city, encrypted_email, encrypted_phoneNumber)
+
+    # Insert new member into the database
     DBConfig.membersDAO.InsertMembers([newMember])
 
     print("Member added successfully.")
-    logging.info("Member added successfully.")
+    logger.info(f"Member added successfully by {username}", extra={"username": username, "suspicious": "No"})
 
     conn.close()
 
 
-def UpdateMember():
+
+def UpdateMember(username):
     updateMenu2()
     option = input("Select an option: ")
-    handle_option2(option)
+    handle_option2(option,username)
 
 def updateMenu2():
     print(
@@ -412,11 +457,11 @@ def updateMenu2():
     "8: Update Zip Code \n" + 
     "9: Update City \n" + 
     "10: Update Email adress \n" + 
-    "11: Update Phone number"
+    "11: Update Phone number \n" 
 
 )
 
-def handle_option2(option):
+def handle_option2(option, username):
     conn = DBConfig.dcm.conn
     cursor = conn.cursor()
     
@@ -424,12 +469,14 @@ def handle_option2(option):
         updatemem = input("Type the first name of the Admin you want to update: ")
         n_name = input("Update first name: ")
         check_name = InputHandler.checkFirstName(n_name)
+        
         if InputHandler.error:
             print(InputHandler.message)
         else:
             query = '''UPDATE users SET FirstName = ? WHERE FirstName = ?'''
             cursor.execute(query, (n_name, updatemem))
             print("Successfully updated to:", n_name)
+            logger.info(f"Successfully updated to:{ n_name} by {username}", extra={"username": username, "suspicious": "No"})
             conn.commit()
     elif option == '2':
         updatemem = input("Type the last name of the Admin you want to update: ")
@@ -441,6 +488,7 @@ def handle_option2(option):
             query = '''UPDATE users SET LastName = ? WHERE LastName = ?'''
             cursor.execute(query, (n_lname, updatemem))
             print("Successfully updated to:", n_lname)
+            logger.info(f"Successfully updated to:{ n_lname} by {username}", extra={"username": username, "suspicious": "No"})
             conn.commit()
     elif option == '3':
         updatemem = input("Type the age of the member you want to update: ")
@@ -451,6 +499,7 @@ def handle_option2(option):
             query = '''UPDATE users SET Age = ? WHERE Age = ?'''
             cursor.execute(query, (age1, updatemem))
             print("Successfully updated to:", age1)
+            logger.info(f"Successfully updated to:{ age1} by {username}", extra={"username": username, "suspicious": "No"})
             conn.commit()
 
     elif option == '4':
@@ -462,6 +511,7 @@ def handle_option2(option):
             query = '''UPDATE users SET Gender = ? WHERE Gender = ?'''
             cursor.execute(query, (gender1, updatemem))
             print("Successfully updated to:", gender1)
+            logger.info(f"Successfully updated to:{ gender1} by {username}", extra={"username": username, "suspicious": "No"})
             conn.commit()
 
     elif option == '5':
@@ -473,6 +523,7 @@ def handle_option2(option):
             query = '''UPDATE users SET Weight = ? WHERE Weight = ?'''
             cursor.execute(query, (weight1, updatemem))
             print("Successfully updated to:", weight1)
+            logger.info(f"Successfully updated to:{ weight1} by {username}", extra={"username": username, "suspicious": "No"})
             conn.commit()
 
     elif option == '6':
@@ -484,6 +535,7 @@ def handle_option2(option):
             query = '''UPDATE users SET Street = ? WHERE Street = ?'''
             cursor.execute(query, (street1, updatemem))
             print("Successfully updated to:", street1)
+            logger.info(f"Successfully updated to:{ street1} by {username}", extra={"username": username, "suspicious": "No"})
             conn.commit()
 
     elif option == '7':
@@ -495,6 +547,7 @@ def handle_option2(option):
             query = '''UPDATE users SET HouseNumber = ? WHERE HouseNumber = ?'''
             cursor.execute(query, (house1, updatemem))
             print("Successfully updated to:", house1)
+            logger.info(f"Successfully updated to:{ house1} by {username}", extra={"username": username, "suspicious": "No"})
             conn.commit()
 
     elif option == '8':
@@ -506,6 +559,7 @@ def handle_option2(option):
             query = '''UPDATE users SET ZipCode = ? WHERE ZipCode = ?'''
             cursor.execute(query, (zipcode1, updatemem))
             print("Successfully updated to:", zipcode1)
+            logger.info(f"Successfully updated to:{ zipcode1} by {username}", extra={"username": username, "suspicious": "No"})
             conn.commit()
 
     
@@ -516,8 +570,9 @@ def handle_option2(option):
             print(InputHandler.message)
         else:
             query = '''UPDATE users SET City = ? WHERE City = ?'''
-            cursor.execute(query, (City, updatemem))
-            print("Successfully updated to:", City)
+            cursor.execute(query, (city1, updatemem))
+            print("Successfully updated to:", city1)
+            logger.info(f"Successfully updated to:{ city1} by {username}", extra={"username": username, "suspicious": "No"})
             conn.commit()
 
 
@@ -530,6 +585,7 @@ def handle_option2(option):
             query = '''UPDATE users SET EmailAdress = ? WHERE EmailAdress = ?'''
             cursor.execute(query, (email1, updatemem))
             print("Successfully updated to:", email1)
+            logger.info(f"Successfully updated to:{ email1} by {username}", extra={"username": username, "suspicious": "No"})
             conn.commit()
 
     elif option == '11':
@@ -541,17 +597,15 @@ def handle_option2(option):
             query = '''UPDATE users SET PhoneNumber = ? WHERE PhoneNumber = ?'''
             cursor.execute(query, (phone1, updatemem))
             print("Successfully updated to:", phone1)
+            logger.info(f"Successfully updated to:{ phone1} by {username}", extra={"username": username, "suspicious": "No"})
             conn.commit()
 
 
 
 
-    
 
 
-
-
-def Deletemember():
+def Deletemember(username):
     conn = DBConfig.dcm.conn
     cursor = conn.cursor()
     
@@ -567,8 +621,10 @@ def Deletemember():
         # Check if any row was affected
         if cursor.rowcount == 1:
             print(f"Successfully deleted Member {First_name} + {Last_name}")
+            logger.info(f"Successfully deleted Member {First_name} + {Last_name} by {username}", extra={"username": username, "suspicious": "No"}) 
         else:
             print(f"Member {First_name} not found or unable to delete.")
+            logger.info(f"Member {First_name} not found or unable to delete by {username}", extra={"username": username, "suspicious": "No"})
             
         # Commit the transaction
         conn.commit()
@@ -576,6 +632,7 @@ def Deletemember():
     except Exception as e:
         # Handle any errors that occur during the deletion process
         print(f"Error deleting : {str(e)}")
+        logger.error(f"Error deleting : {str(e)} by {username}")
     
     finally:
         # Close cursor and connection
@@ -587,7 +644,8 @@ def Deletemember():
 
 
 
-def searchMember(search_key='all'):
+def searchMember(username):
+    search_key='all'
     conn = DBConfig.dcm.conn
     cursor = conn.cursor()
 
@@ -595,7 +653,7 @@ def searchMember(search_key='all'):
     search_input = input("Type (partial) member information: ").lower()
 
     if search_key == 'all':
-        search_key_list = ['memberID', 'firstName', 'lastName', 'age', 'gender', 'weight', 'street', 'houseNumber', 'zipCode', 'city', 'email', 'phoneNumber']
+        search_key_list = ['membershipID', 'firstName', 'lastName', 'age', 'gender', 'weight', 'street', 'houseNumber', 'zipCode', 'city', 'email', 'phoneNumber']
     else:
         search_key_list = [search_key]
 
@@ -605,7 +663,7 @@ def searchMember(search_key='all'):
     for row in records:
         search = False
         for key in search_key_list:
-            if key == 'memberID':
+            if key == 'membershipID':
                 field_value = str(row[0]).lower()
             elif key == 'firstName':
                 field_value = str(row[1]).lower()
@@ -640,6 +698,8 @@ def searchMember(search_key='all'):
             total_found += 1
 
     print(f"Total members found: {total_found}")
+    logger.info(f"{username} searched for a member", extra={"username": username, "suspicious": "No"})
+
 
     cursor.close()
     conn.close()
@@ -647,18 +707,18 @@ def searchMember(search_key='all'):
 
 
 
-def PasswordRenew():
+def PasswordRenew(username):
     conn = DBConfig.dcm.conn
     cursor = conn.cursor()
     ph = PasswordHasher()
 
     try:
-        username = input("Enter the username to reset: ")
+        usernames = input("Enter the username to reset: ")
 
         # Check if the user exists
         consToResetPW = DBConfig.usersDAO.SelectUser(username)
         if not consToResetPW:
-            print(f"Consultant {username} not found.")
+            print(f"Consultant {usernames} not found.")
             return
 
         # Debug: Print the stored password hash
@@ -678,8 +738,9 @@ def PasswordRenew():
         hashed_password = ph.hash(n_password)
 
         # Update the user's password in the database
-        DBConfig.usersDAO.UpdateUserPassword(username, consToResetPW[1], hashed_password)
-        print(f"Successfully updated password for: {username}")
+        DBConfig.usersDAO.UpdateUserPassword(usernames, consToResetPW[1], hashed_password)
+        print(f"Successfully updated password for: {usernames}")
+        logger.info(f"{username} reset password for {usernames}", extra={"username": username, "suspicious": "No"})
 
         # Commit the transaction
         conn.commit()
@@ -689,3 +750,22 @@ def PasswordRenew():
         conn.rollback()
     finally:
         conn.close()
+
+def view_superadmin_logs():
+    # Only allow SuperAdmin to access this function
+    username = input("Enter username: ")
+    if username != "super_admin":  # Replace with real SuperAdmin check
+        print("Access denied!")
+        return
+
+    try:
+        with open("superadmin_log.log", "rb") as log_file:
+            for encrypted_log in log_file:
+                # Decrypt each log entry
+                decrypted_log = cipher.decrypt(encrypted_log.strip())
+                print(decrypted_log.decode())
+
+
+    except Exception as e:
+        print(f"Error reading SuperAdmin logs: {str(e)}")
+        

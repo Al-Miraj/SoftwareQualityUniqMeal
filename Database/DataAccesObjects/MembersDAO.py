@@ -1,99 +1,190 @@
+from CryptUtils.argon import ph
+from CryptUtils.CryptoManager import encrypt
+
+
 class MembersDAO:
     def __init__(self, connection):
         self.conn = connection
     
-    def InsertMembers(self, members: iter) -> None:
+    def InsertMembers(self, members: iter) -> bool:
+        cursor = self.conn.cursor()
         for member in members:
-            cursor = self.conn.cursor()
-            cursor.execute("""INSERT INTO members (MembershipID, FirstName, LastName, Age, Gender, Weight, Street, HouseNumber, ZipCode, City, Email, PhoneNumber, RegistrationDate)
-                              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", [*member.__dict__.values()])
+            insertMemberQ = """INSERT OR IGNORE INTO members (MembershipID, FirstName, LastName, Age, Gender, Weight, Street, HouseNumber, ZipCode, City, Email, PhoneNumber, RegistrationDate)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+            insertMemberValues = [encrypt(member.MembershipID),
+                                  encrypt(member.FirstName),
+                                  encrypt(member.LastName),
+                                  encrypt(str(member.Age)),
+                                  encrypt(member.Gender),
+                                  encrypt(str(member.Weight)),
+                                  encrypt(member.Street),
+                                  encrypt(member.HouseNumber),
+                                  encrypt(member.ZipCode),
+                                  encrypt(member.City),
+                                  encrypt(member.Email),
+                                  encrypt(member.PhoneNumber),
+                                  encrypt(str(member.RegistrationDate))]
+            cursor.execute(insertMemberQ, insertMemberValues)
         self.conn.commit()
-        cursor.close()
+        if cursor.rowcount > 0:
+            cursor.close()
+            return True
+        else:
+            cursor.close()
+            return False
 
-    def DeleteMember(self, membershipID, firstName, lastName) -> None:
+    def DeleteMember(self, membershipID, firstName, lastName) -> bool:
         cursor = self.conn.cursor()
-        cursor.execute("DELETE FROM members WHERE MembershipID=? AND FirstName=? AND LastName=?", [membershipID, firstName, lastName])
+        cursor.execute("DELETE FROM members WHERE MembershipID=? AND FirstName=? AND LastName=?", [encrypt(membershipID), encrypt(firstName), encrypt(lastName)])
         self.conn.commit()
-        cursor.close()
+        if cursor.rowcount > 0:
+            cursor.close()
+            return True
+        else:
+            cursor.close()
+            return False
 
-    def UpdateMemberMembershipID(self, oldMembershipId, newMembershipID) -> None:
+    def UpdateMemberMembershipID(self, oldMembershipId, newMembershipID) -> bool:
         cursor = self.conn.cursor()
-        cursor.execute("UPDATE members SET MembershipID=? WHERE MembershipID=?", [newMembershipID, oldMembershipId])
+        cursor.execute("UPDATE members SET MembershipID=? WHERE MembershipID=?", [encrypt(newMembershipID), encrypt(oldMembershipId)])
         self.conn.commit()
-        cursor.close()
+        if cursor.rowcount > 0:
+            cursor.close()
+            return True
+        else:
+            cursor.close()
+            return False
     
-    def UpdateMemberFirstName(self, membershipID, oldFirstName, newFirstName) -> None:
+    def UpdateMemberFirstName(self, membershipID, oldFirstName, newFirstName) -> bool:
         cursor = self.conn.cursor()
-        cursor.execute("UPDATE members SET FirstName=? WHERE FirstName=? AND MembershipID=?", [newFirstName, oldFirstName, membershipID])
+        cursor.execute("UPDATE members SET FirstName=? WHERE FirstName=? AND MembershipID=?", [encrypt(newFirstName), encrypt(oldFirstName), encrypt(membershipID)])
         self.conn.commit()
-        cursor.close()
+        if cursor.rowcount > 0:
+            cursor.close()
+            return True
+        else:
+            cursor.close()
+            return False
 
-    def UpdateMemberLastName(self, membershipID, oldLastName, newLastName) -> None:
+    def UpdateMemberLastName(self, membershipID, oldLastName, newLastName) -> bool:
         cursor = self.conn.cursor()
-        cursor.execute("UPDATE members SET LastName=? WHERE LastName=? AND MembershipID=?", [newLastName, oldLastName, membershipID])
+        cursor.execute("UPDATE members SET LastName=? WHERE LastName=? AND MembershipID=?", [encrypt(newLastName), encrypt(oldLastName), encrypt(membershipID)])
         self.conn.commit()
-        cursor.close()
+        if cursor.rowcount > 0:
+            cursor.close()
+            return True
+        else:
+            cursor.close()
+            return False
 
-    def UpdateMemberAge(self, membershipID, oldAge, newAge) -> None:
+    def UpdateMemberAge(self, membershipID, oldAge, newAge) -> bool:
         cursor = self.conn.cursor()
-        cursor.execute("UPDATE members SET Age=? WHERE Age=? AND MembershipID=?", [newAge, oldAge, membershipID])
+        cursor.execute("UPDATE members SET Age=? WHERE Age=? AND MembershipID=?", [encrypt(str(newAge)), encrypt(oldAge), encrypt(membershipID)])
         self.conn.commit()
-        cursor.close()
+        if cursor.rowcount > 0:
+            cursor.close()
+            return True
+        else:
+            cursor.close()
+            return False
 
-    def UpdateMemberGender(self, membershipID, oldGender, newGender) -> None:
+    def UpdateMemberGender(self, membershipID, oldGender, newGender) -> bool:
         cursor = self.conn.cursor()
-        cursor.execute("UPDATE members SET Gender=? WHERE Gender=? AND MembershipID=?", [newGender, oldGender, membershipID])
+        cursor.execute("UPDATE members SET Gender=? WHERE Gender=? AND MembershipID=?", [encrypt(newGender), encrypt(oldGender), encrypt(membershipID)])
         self.conn.commit()
-        cursor.close()
+        if cursor.rowcount > 0:
+            cursor.close()
+            return True
+        else:
+            cursor.close()
+            return False
 
-    def UpdateMemberWeight(self, membershipID, oldWeight, newWeight) -> None:
+    def UpdateMemberWeight(self, membershipID, oldWeight, newWeight) -> bool:
         cursor = self.conn.cursor()
-        cursor.execute("UPDATE members SET Weight=? WHERE Weight=? AND MembershipID=?", [newWeight, oldWeight, membershipID])
+        cursor.execute("UPDATE members SET Weight=? WHERE Weight=? AND MembershipID=?", [encrypt(str(newWeight)), encrypt(oldWeight), encrypt(membershipID)])
         self.conn.commit()
-        cursor.close()
+        if cursor.rowcount > 0:
+            cursor.close()
+            return True
+        else:
+            cursor.close()
+            return False
 
-    def UpdateMemberStreet(self, membershipID, oldStreet, newStreet) -> None:
+    def UpdateMemberStreet(self, membershipID, oldStreet, newStreet) -> bool:
         cursor = self.conn.cursor()
-        cursor.execute("UPDATE members SET Street=? WHERE Street=? AND MembershipID=?", [newStreet, oldStreet, membershipID])
+        cursor.execute("UPDATE members SET Street=? WHERE Street=? AND MembershipID=?", [encrypt(newStreet), encrypt(oldStreet), encrypt(membershipID)])
         self.conn.commit()
-        cursor.close()
+        if cursor.rowcount > 0:
+            cursor.close()
+            return True
+        else:
+            cursor.close()
+            return False
 
-    def UpdateMemberHouseNumber(self, membershipID, olHouseNumber, newHouseNumber) -> None:
+    def UpdateMemberHouseNumber(self, membershipID, olHouseNumber, newHouseNumber) -> bool:
         cursor = self.conn.cursor()
-        cursor.execute("UPDATE members SET HouseNumber=? WHERE HouseNumber=? AND MembershipID=?", [newHouseNumber, olHouseNumber, membershipID])
+        cursor.execute("UPDATE members SET HouseNumber=? WHERE HouseNumber=? AND MembershipID=?", [encrypt(newHouseNumber), encrypt(olHouseNumber), encrypt(membershipID)])
         self.conn.commit()
-        cursor.close()
+        if cursor.rowcount > 0:
+            cursor.close()
+            return True
+        else:
+            cursor.close()
+            return False
 
-    def UpdateMemberZipCode(self, membershipID, oldZipCode, newZipCode) -> None:
+    def UpdateMemberZipCode(self, membershipID, oldZipCode, newZipCode) -> bool:
         cursor = self.conn.cursor()
-        cursor.execute("UPDATE members SET ZipCode=? WHERE ZipCode=? AND MembershipID=?", [newZipCode, oldZipCode, membershipID])
+        cursor.execute("UPDATE members SET ZipCode=? WHERE ZipCode=? AND MembershipID=?", [encrypt(newZipCode), encrypt(oldZipCode), encrypt(membershipID)])
         self.conn.commit()
-        cursor.close()
+        if cursor.rowcount > 0:
+            cursor.close()
+            return True
+        else:
+            cursor.close()
+            return False
 
-    def UpdateMemberCity(self, membershipID, oldCity, newCity) -> None:
+    def UpdateMemberCity(self, membershipID, oldCity, newCity) -> bool:
         cursor = self.conn.cursor()
-        cursor.execute("UPDATE members SET City=? WHERE City=? AND MembershipID=?", [newCity, oldCity, membershipID])
+        cursor.execute("UPDATE members SET City=? WHERE City=? AND MembershipID=?", [encrypt(newCity), encrypt(oldCity), encrypt(membershipID)])
         self.conn.commit()
-        cursor.close()
+        if cursor.rowcount > 0:
+            cursor.close()
+            return True
+        else:
+            cursor.close()
+            return False
 
-    def UpdateMemberEmail(self, membershipID, oldEmail, newEmail) -> None:
+    def UpdateMemberEmail(self, membershipID, oldEmail, newEmail) -> bool:
         cursor = self.conn.cursor()
-        cursor.execute("UPDATE members SET Email=? WHERE Email=? AND MembershipID=?", [newEmail, oldEmail, membershipID])
+        cursor.execute("UPDATE members SET Email=? WHERE Email=? AND MembershipID=?", [encrypt(newEmail), encrypt(oldEmail), encrypt(membershipID)])
         self.conn.commit()
-        cursor.close()
+        if cursor.rowcount > 0:
+            cursor.close()
+            return True
+        else:
+            cursor.close()
+            return False
 
-    def UpdateMemberPhoneNumber(self, membershipID, oldPhoneNumber, newPhoneNumber) -> None:
+    def UpdateMemberPhoneNumber(self, membershipID, oldPhoneNumber, newPhoneNumber) -> bool:
         cursor = self.conn.cursor()
-        cursor.execute("UPDATE members SET PhoneNumber=? WHERE PhoneNumber=? AND MembershipID=?", [newPhoneNumber, oldPhoneNumber, membershipID])
+        cursor.execute("UPDATE members SET PhoneNumber=? WHERE PhoneNumber=? AND MembershipID=?", [encrypt(newPhoneNumber), encrypt(oldPhoneNumber), encrypt(membershipID)])
         self.conn.commit()
-        cursor.close()
+        if cursor.rowcount > 0:
+            cursor.close()
+            return True
+        else:
+            cursor.close()
+            return False
 
     def SelectMember(self, firstName, lastName) -> any:
         cursor = self.conn.cursor()
-        fetchedMember = cursor.execute("SELECT * FROM members WHERE FirstName=? AND LastName=?", [firstName, lastName]).fetchone()
+        fetchedMember = cursor.execute("SELECT * FROM members WHERE FirstName=? AND LastName=?", [encrypt(firstName), encrypt(lastName)]).fetchone()
         cursor.close()
         return fetchedMember
     
+    # NOTE: partial match was not possible with encryption as it wasnt able to match
+    #       correctly. it only matched to the whole value. 
+    #       Micheal will match, but icheal will not
     def SelectMemberByMatch(self, searchTerm) -> any: #member ID, first name, last name, address, email address, and phone number
         cursor = self.conn.cursor()
         fetchedMemberQuery = """
@@ -109,7 +200,7 @@ class MembersDAO:
                                     Email LIKE ? OR
                                     PhoneNumber LIKE ?
                              """
-        fetchedMembers = cursor.execute(fetchedMemberQuery, ('%' + searchTerm + '%',) * 9).fetchall()
+        fetchedMembers = cursor.execute(fetchedMemberQuery, ('%' + encrypt(searchTerm) + '%',) * 9).fetchall()
         return fetchedMembers
 
     

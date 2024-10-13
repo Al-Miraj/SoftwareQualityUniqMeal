@@ -2,21 +2,25 @@ from .DataAccesObjects.MembersDAO import MembersDAO
 from .DataAccesObjects.UsersDAO import UsersDAO
 from .DBConnectionManager import DCM
 from JsonFileHandler.JsonFileHandler import JsonFileHandler
+from CryptUtils.CryptoManager import encrypt, decrypt
 from Roles.Member import Member
 from Roles.User import User
-from argon2 import PasswordHasher
-
+from CryptUtils.argon import ph
+#works like a static class
 class DBConfig:
     DBName = "UniqueMealDB"
     DBFile = "UniqueMealDB.db"
     DBPath = "Database\\UniqueMealDB.db" #"SoftwareQualityUniqMeal\\Database\\UniqueMealDB.db"
-    membersJsonPath = "Database\\members.json"
-    usersJsonPath = "Database\\users.json"
+    membersJsonPath = "Database\\Data\\members.json"
+    usersJsonPath = "Database\\Data\\users.json"
     dcm = DCM(DBFile)
     dcm.connect()
     usersDAO = UsersDAO(dcm.conn)
     membersDAO = MembersDAO(dcm.conn)
-    ph = PasswordHasher()
+
+
+    def hi():
+        return True
 
 
     def ResetMembers():
@@ -61,7 +65,19 @@ class DBConfig:
             
             insertMemberQ = """INSERT OR IGNORE INTO members (MembershipID, FirstName, LastName, Age, Gender, Weight, Street, HouseNumber, ZipCode, City, Email, PhoneNumber, RegistrationDate)
                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
-            insertMemberValues = [*memberObj.__dict__.values()]
+            insertMemberValues = [encrypt(memberObj.MembershipID),
+                                  encrypt(memberObj.FirstName),
+                                  encrypt(memberObj.LastName),
+                                  encrypt(str(memberObj.Age)),
+                                  encrypt(memberObj.Gender),
+                                  encrypt(str(memberObj.Weight)),
+                                  encrypt(memberObj.Street),
+                                  encrypt(memberObj.HouseNumber),
+                                  encrypt(memberObj.ZipCode),
+                                  encrypt(memberObj.City),
+                                  encrypt(memberObj.Email),
+                                  encrypt(memberObj.PhoneNumber),
+                                  encrypt(memberObj.RegistrationDate)]
             cursor.execute(insertMemberQ, insertMemberValues)
         DBConfig.dcm.conn.commit()
     
@@ -80,14 +96,19 @@ class DBConfig:
             
             insertUsersQ = """INSERT OR IGNORE INTO users (Username, Password, FirstName, LastName, RegistrationDate, Role)
                             VALUES (?, ?, ?, ?, ?, ?)"""
-            insertUsersValues = [userObj.Username, DBConfig.ph.hash(userObj.Username + userObj.Password), userObj.FirstName, userObj.LastName, userObj.RegistrationDate, userObj.Role]
+            insertUsersValues = [encrypt(userObj.Username), 
+                                 encrypt(ph.hash(userObj.Username + userObj.Password)), 
+                                 encrypt(userObj.FirstName), 
+                                 encrypt(userObj.LastName), 
+                                 encrypt(userObj.RegistrationDate), 
+                                 encrypt(userObj.Role)]
             cursor.execute(insertUsersQ, insertUsersValues)
         DBConfig.dcm.conn.commit()
 
 
     def createTable():
         query = """
-CREATE TABLE IF NOT EXISTS membersS (
+CREATE TABLE IF NOT EXISTS members (
     MembershipID TEXT REQUIRED KEY,
     FirstName TEXT NOT NULL,
     LastName TEXT NOT NULL,

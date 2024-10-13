@@ -2,7 +2,7 @@ from . import InputDef
 from Roles.SuperAdmin import SuperAdmin
 from . import LOG
 
-def display_menuA():
+def display_menuA(username):
     print(
     "Super add\n" +
     "1: Check Users and their Roles \n" + 
@@ -25,59 +25,59 @@ def display_menuA():
     )
 
     user_input = input("Select an option: ")
-    handle_optionA(user_input)
+    handle_optionA(user_input, username)
     
 
 
 
 
-def handle_optionA(option):
+def handle_optionA(option, username):
     if option == '1':
-        InputDef.CheckList()
-        display_menuA()
+        InputDef.CheckList(username)
+        display_menuA(username)
     elif option == '2':
-        InputDef.AddConsultant()
-        display_menuA()
+        InputDef.AddConsultant(username)
+        display_menuA(username)
     elif option == '3':
-        InputDef.UpdateConsultant()
-        display_menuA()
+        InputDef.UpdateConsultant(username)
+        display_menuA(username)
     elif option == '4':
-        InputDef.Deleteconsultant()
-        display_menuA()
+        InputDef.Deleteconsultant(username)
+        display_menuA(username)
     elif option == '5':
-        InputDef.ResetconsultantPassword()
-        display_menuA()
+        InputDef.ResetconsultantPassword(username)
+        display_menuA(username)
     elif option == '6':
-        InputDef.AddSystemAdmin()
-        display_menuA()
+        InputDef.AddSystemAdmin(username)
+        display_menuA(username)
     elif option == '7':
-        InputDef.UpdateSystemAdmin()
-        display_menuA()
+        InputDef.UpdateSystemAdmin(username)
+        display_menuA(username)
     elif option == '8':
-        InputDef.DeleteSystemAdmin()
-        display_menuA()
+        InputDef.DeleteSystemAdmin(username)
+        display_menuA(username)
     elif option == '9':
-        InputDef.ResetadminPassword()
-        display_menuA()
+        InputDef.ResetadminPassword(username)
+        display_menuA(username)
     elif option == '10':
         pass
     elif option == '11':
         pass
     elif option == '12':
-        LOG.getLog()
-        display_menuA()
+        LOG.view_superadmin_logs()
+        display_menuA(username)
     elif option == '13':
-        InputDef.AddMember()
-        display_menuA()
+        InputDef.AddMember(username)
+        display_menuA(username)
     elif option == '14':
-        InputDef.UpdateMember()
-        display_menuA()
+        InputDef.UpdateMember(username)
+        display_menuA(username)
     elif option == '15':
-        InputDef.Deletemember()
-        display_menuA()
+        InputDef.Deletemember(username)
+        display_menuA(username)
     elif option == '16':
-        InputDef.searchMember()
-        display_menuA()
+        InputDef.searchMember(username)
+        display_menuA(username)
     elif option == '17':
         print("Exiting...")
         exit(0)

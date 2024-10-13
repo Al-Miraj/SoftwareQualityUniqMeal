@@ -1,34 +1,34 @@
-# from InputChecker import InputChecker
-from Roles.User import User
-from Roles.Member import Member
-from Roles.Consultant import Consultant
-from Roles.SystemAdmin import SystemAdmin
-from Roles.SuperAdmin import SuperAdmin
 from Database.DBConfig import DBConfig
-from Database.DataAccesObjects.UsersDAO import UsersDAO
-from Database.DataAccesObjects.MembersDAO import MembersDAO
-from InputHandler.InputHandler import InputHandler
+from CryptUtils.CryptoManager import encrypt, decrypt
+from CryptUtils.argon import ph
+from Roles.SuperAdmin import SuperAdmin
+from Roles.Member import Member, datetime
 from Login import Login
-from Login import InputDef
 from Backup import Backup
 
-import sqlite3
-import os
-import sys
 
 
-def read_json_file(filename) -> list:  # buiten class?
+def CreateMemberObj(fetchedMember):
+    id_ = decrypt(fetchedMember[0])
+    FirstName  = decrypt(fetchedMember[1])
+    LastName  = decrypt(fetchedMember[2])
+    Age = decrypt(fetchedMember[3])
+    Gender  = decrypt(fetchedMember[4])
+    Weight   = decrypt(fetchedMember[5])
+    Street      = decrypt(fetchedMember[6])
+    HouseNumber = decrypt(fetchedMember[7])
+    zipcode = decrypt(fetchedMember[7])
+    city = decrypt(fetchedMember[7])
+    email = decrypt(fetchedMember[7])
+    phoneNumber = decrypt(fetchedMember[7])
+    registrationDate = decrypt(fetchedMember[7])
+    obj = Member(FirstName, LastName, Age, Gender, Weight, Street, HouseNumber, zipcode, city, email, phoneNumber, registrationDate)
+    obj.MembershipID = id_
+    return obj
 
-    with open(os.path.join(os.path.dirname(__file__), filename), encoding="utf-8") as file:
-
-        contents = json.load(file)
-    return contents
 
 
 if __name__ == "__main__":
-    Backup.restore_backup()
-    #Login.Loginmain()
-    #ww: Admin123?
-
-
-
+    print("--start--\n\n")
+    
+    Login.RunLoginPage()

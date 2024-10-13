@@ -7,8 +7,8 @@ class Consultant(User):
     def UpdatePassword(self, newPassword):
         oldPassword = self.Password
         username = self.Username
-        self.Password = newPassword
-        DBConfig.usersDAO.UpdateUserPassword(username, oldPassword, newPassword)
+        self.Password = ph.hash(self.Username + newPassword)
+        return DBConfig.usersDAO.UpdateUserPassword(username, oldPassword, newPassword)
     
     def AddNewMember(self, firstName, lastName, age, gender, weight, street, houseNumber, zipCode, city, email, phoneNumber):
         newMember = Member(firstName, lastName, age, gender, weight, street, houseNumber, zipCode, city, email, phoneNumber)
