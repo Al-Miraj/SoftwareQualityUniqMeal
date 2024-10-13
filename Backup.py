@@ -44,7 +44,7 @@ import zipfile
 from datetime import datetime
 
 FILE_TO_BACKUP = 'Database/UniqueMealDB.db'
-LOG_FILE = 'Database/logfile.log'  # Path naar het logbestand !!!!!!!!!!!!!!!!!!
+LOG_FILE = 'superadmin_log.log'
 
 class Backup:
 
@@ -62,7 +62,6 @@ class Backup:
             with zipfile.ZipFile(new_backup_file, 'w') as zipf:
                 zipf.write(FILE_TO_BACKUP, os.path.basename(FILE_TO_BACKUP))
                 
-                # Voeg het logbestand toe aan de zip als het bestaat TODOOOOOOO
                 if os.path.exists(LOG_FILE):
                     zipf.write(LOG_FILE, os.path.basename(LOG_FILE))
                 else:
